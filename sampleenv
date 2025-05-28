@@ -1,0 +1,5 @@
+QURAN_DOT_COM_API_URL="https://apis.quran.foundation/content/api/v4"
+QURAN_DOT_COM_AUTH_URL="https://oauth2.quran.foundation"
+QURAN_DOT_COM_CLIENT_ID=""
+QURAN_DOT_COM_CLIENT_SECRET=""
+QURAN_DOT_COM_ACCESS_TOKEN=""
