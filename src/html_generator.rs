@@ -24,19 +24,30 @@ pub(crate) async fn handler(
             "
         <style>
             @font-face {{
-                font-family: 'arabic';
-                src: url('fonts/AlQuran-IndoPak-by-QuranWBW.v.4.2.2-WL.ttf') format('truetype');
-                font-weight: normal;
-                font-style: normal;
+                font-family: 'IndoPak';
+                src:
+                    local('AlQuran IndoPak by QuranWBW'),
+                    url('fonts/indopak-nastaleeq-waqf-lazim-v4.2.1.ttf') format('truetype');
+                font-display: swap;
             }}
+
+            @font-face {{
+                font-family: 'UthmanicHafs';
+                src:
+                    local('KFGQPC HAFS Uthmanic Script'),
+                    url('fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.ttf') format('truetype');
+                font-display: swap;
+            }}
+
             .container {{
                 border-bottom: 1px solid black;
                 margin-bottom: 30px;
+                padding-bottom: 15px;
             }}
 
             .arabic {{
                 font-size: 2em;
-                font-family: 'arabic', sans-serif;
+                font-family: 'IndoPak', sans-serif;
             }}
             .wbw {{
                 font-size: 0.8em;
@@ -46,15 +57,14 @@ pub(crate) async fn handler(
             .translation {{
                 font-size: 1em;
             }}
-            .footer {{
-                margin-bottom: 15px;
-            }}
+            .header {{}}
             .page {{
-                font-size: 0.2em;
+                font-size: 0.6em;
             }}
             .sajdah {{
                 font-weight: 600;
             }}
+            .ayah {{}}
         </style>
         ",
         );
@@ -110,13 +120,20 @@ pub(crate) async fn handler(
             output_html.push_str(&format!(
                 "
             <div class=\"container\">
-                <div class=\"arabic\">{}</div>
-                <div class=\"wbw\">{}</div>
-                <div class=\"translation\">{}. {}</div>
-                <div class=\"footer\">
-                    <span class=\"page\">Pg.{}</span>
-                    <span class=\"sajdah\">{}</span>
-                </div>
+                <table width=\"100%\">
+                    <tr>
+                        <td align=\"left\" style=\"white-space: nowrap;\">
+                            <span class=\"page\">Pg.{4}</span>
+                            <span class=\"sajdah\">{5}</span>
+                        </td>
+                        <td align=\"right\" style=\"white-space: nowrap;\">
+                            <span class=\"ayah\">{2}</span>
+                        </td>
+                    </tr>
+                </table>
+                <div class=\"arabic\">{0}</div>
+                <div class=\"wbw\">{1}</div>
+                <div class=\"translation\">{2}. {3}</div>
             </div>",
                 output_verse.arabic_text,
                 output_verse.word_by_word,

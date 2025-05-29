@@ -108,6 +108,7 @@ pub(crate) async fn handler(
 
     if res.is_err() {
         eprintln!("Error: Failed to fetch data from quran.com server.");
+        eprintln!("{:#?}", res);
         std::process::exit(1)
     }
 

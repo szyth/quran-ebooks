@@ -14,7 +14,8 @@ Features:
 - English translation by Dr. Mustafa Khattab
 - Page number and Sajdah.
 
-
+# Known bugs:
+- alif-noon comes to top
 
 
 # Create EPUBs
@@ -53,8 +54,14 @@ cargo run -- --generate-html --start-surah 1 --end-surah 114
 
 ### 3. Convert HTMLs to EPUB
 ```bash
-cargo run -- --convert
-# Created EPUBs can be found in epub folder
+# Install Calibre software, it comes with an `ebook-convert` plugin.
+# run the following shell command from root of project.
+mkdir -p ebooks && for f in output/*.html; do ebook-convert "$f" "ebooks/$(basename "${f%.html}.epub")" --disable-font-rescaling; done
+
+# or do manually with:
+ebook-convert filename.html filename.epub --disable-font-rescaling
+
+# Created EPUBs can be found in `ebooks` folder
 ```
 
 
