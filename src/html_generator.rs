@@ -1,4 +1,6 @@
-use crate::quran_com::{get_surah_details, get_verses_by_chapter};
+use regex::Regex;
+
+use crate::quran_com::{footnote::get_footnote, get_surah_details, get_verses_by_chapter};
 
 #[derive(serde::Serialize, Debug)]
 struct OutputVerse {
@@ -8,7 +10,7 @@ struct OutputVerse {
     translation: String,
     page_number: u32,
     sajdah: String,
-    footnotes: Vec<String>,
+    footnotes: String,
 }
 pub(crate) async fn handler(
     start_surah: u8,
@@ -47,6 +49,7 @@ pub(crate) async fn handler(
 
             .arabic {{
                 font-size: 2em;
+                line-height: 1.5;
                 font-family: 'IndoPak', sans-serif;
             }}
             .wbw {{
@@ -65,6 +68,14 @@ pub(crate) async fn handler(
                 font-weight: 600;
             }}
             .ayah {{}}
+            .footnote {{
+                font-size: 0.7em;
+                border: 1px solid #424242;
+                padding: 0.4em;
+            }}
+            .footnote p {{
+                margin: 3px;
+            }}
         </style>
         ",
         );
@@ -89,17 +100,14 @@ pub(crate) async fn handler(
                         .expect("failed to unwrap word.translation.text")
                 ));
             }
-
-            let mut footnotes: Vec<String> = vec![];
-            // let footnote = get_footnote(76373).await?;
-            // footnotes.push(footnote);
+            let translations = verse.translations[0].text.clone();
+            let footnotes = get_footnote(&translations).await?;
 
             let output_verse = OutputVerse {
                 arabic_text: verse.text_indopak,
                 verse: verse.verse_number,
                 word_by_word: output_word,
-                // translation: "".into(),
-                translation: verse.translations[0].text.clone(),
+                translation: translations,
                 page_number: verse.page_number,
                 sajdah: {
                     if verse.sajdah_number.is_some() {
@@ -110,13 +118,6 @@ pub(crate) async fn handler(
                 },
                 footnotes,
             };
-            // output_html.push_str(&format!(
-            //     "<h3>{}</h3>\n{}\n{}\n{}\n\n\n",
-            //     output_verse.arabic_text,
-            //     output_verse.word_by_word,
-            //     output_verse.translation,
-            //     output_verse.sajdah
-            // ));
             output_html.push_str(&format!(
                 "
             <div class=\"container\">
@@ -134,6 +135,7 @@ pub(crate) async fn handler(
                 <div class=\"arabic\">{0}</div>
                 <div class=\"wbw\">{1}</div>
                 <div class=\"translation\">{2}. {3}</div>
+                {6}
             </div>",
                 output_verse.arabic_text,
                 output_verse.word_by_word,
@@ -141,6 +143,7 @@ pub(crate) async fn handler(
                 output_verse.translation,
                 output_verse.page_number,
                 output_verse.sajdah,
+                output_verse.footnotes
             ));
             output_json.push(output_verse);
         }

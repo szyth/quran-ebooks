@@ -83,8 +83,10 @@ pub(crate) async fn handler(
     ); // safe to use unwrap
 
     let mut headers = reqwest::header::HeaderMap::new();
-    headers.insert("x-auth-token", env::access_token().unwrap().parse()?); // safe to use unwrap
-    headers.insert("x-client-id", env::client_id().unwrap().parse()?); // safe to use unwrap
+    headers.insert("Referer", "https://quran.com".parse()?); // safe to use unwrap
+
+    // headers.insert("x-auth-token", env::access_token().unwrap().parse()?); // safe to use unwrap
+    // headers.insert("x-client-id", env::client_id().unwrap().parse()?); // safe to use unwrap
 
     let mut params = HashMap::new();
     params.insert("translations", "131");

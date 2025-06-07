@@ -1,5 +1,9 @@
+use regex::Regex;
+
+use crate::env;
+
 #[derive(thiserror::Error, Debug)]
-enum Error {
+pub(crate) enum Error {
     #[error("ReqWestError: {0}")]
     ReqWestError(#[from] reqwest::Error),
 }
@@ -16,22 +20,31 @@ struct Footnote {
     text: String,
     language_name: String,
 }
-async fn get_footnote(footnote_number: u32) -> Result<String, Error> {
-    let quran_api = "https://quran.com/api/proxy/content/api/qdc/foot_notes";
-    let footnote_url = format!("{quran_api}/{}", footnote_number);
-    println!("{footnote_url}");
+pub(crate) async fn get_footnote(text: &String) -> Result<String, Error> {
+    let mut footnote: String = String::new();
+    let re = Regex::new(r"<sup foot_note=(?<footnote>\d*)>").unwrap();
+    for (index, caps) in re.captures_iter(&text).enumerate() {
+        let url = format!(
+            "{}/foot_notes/{}",
+            env::api_url().unwrap(),
+            &caps["footnote"]
+        ); // safe to use unwrap
 
-    let mut headers = reqwest::header::HeaderMap::new();
-    headers.insert("Referer", "https://quran.com/1".parse().unwrap()); // safe to use unwrap
+        let mut headers = reqwest::header::HeaderMap::new();
+        headers.insert("Referer", "https://quran.com".parse().unwrap()); // safe to use unwrap
 
-    let res: Response = reqwest::Client::new()
-        .get(footnote_url)
-        .headers(headers)
-        .send()
-        .await?
-        .json()
-        .await?;
+        let res: Response = reqwest::Client::new()
+            .get(url)
+            .headers(headers)
+            .send()
+            .await?
+            .json()
+            .await?;
 
-    let footnote = format!("Footnote");
-    Ok(res.foot_note.text)
+        footnote.push_str(&format!("Footnote {}: {}", index + 1, res.foot_note.text));
+    }
+    if !footnote.is_empty() {
+        footnote = format!("<div class=\"footnote\">{}</div>", footnote);
+    }
+    Ok(footnote)
 }
