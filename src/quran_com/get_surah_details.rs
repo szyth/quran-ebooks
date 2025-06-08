@@ -3,10 +3,14 @@ use serde::Deserialize;
 #[derive(Deserialize, Debug, Clone)]
 pub(crate) struct SurahDetails {
     id: u8,
-    pub(crate) transliteratedName: String,
-    revelationPlace: String,
-    versesCount: u32,
-    translatedName: String,
+    #[serde(rename = "transliteratedName")]
+    pub(crate) transliterated_name: String,
+    #[serde(rename = "revelationPlace")]
+    revelation_place: String,
+    #[serde(rename = "versesCount")]
+    verses_count: u32,
+    #[serde(rename = "translatedName")]
+    translated_name: String,
     slug: String,
 }
 pub(crate) fn handler(

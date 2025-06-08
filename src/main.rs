@@ -2,6 +2,7 @@ use clap::{ArgGroup, CommandFactory, Parser};
 mod env;
 mod html_generator;
 mod quran_com;
+mod verse;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]

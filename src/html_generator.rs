@@ -1,6 +1,4 @@
-use regex::Regex;
-
-use crate::quran_com::{footnote::get_footnote, get_surah_details, get_verses_by_chapter};
+use crate::{quran_com::get_surah_details, verse::Verse};
 
 #[derive(serde::Serialize, Debug)]
 struct OutputVerse {
@@ -18,12 +16,38 @@ pub(crate) async fn handler(
 ) -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
     for surah_number in start_surah..=end_surah {
         let surah_details = get_surah_details::handler(surah_number)?;
-        let surah_name = surah_details.transliteratedName;
-        let data = get_verses_by_chapter::handler(surah_number).await?;
+        let surah_name = surah_details.transliterated_name;
+        let data = Verse::by_surah(surah_number).await?;
 
-        let mut output_json: Vec<OutputVerse> = vec![];
-        let mut output_html = format!(
-            "
+        let mut output_html = get_html_styling();
+        for verse in data.verses {
+            output_html.push_str(&format!(
+                "<div class=\"container\">
+                    {0}
+                    {1}
+                    {2}
+                    {3}
+                </div>
+                ",
+                verse.get_header(), // page number, sajdah, ayah
+                verse.get_arabic_indopak(),
+                verse.get_word_by_word(),
+                verse.get_translations().await?
+            ));
+        }
+
+        // save a response
+        let _res = std::fs::write(
+            format!("output/{}. {}.html", surah_number, surah_name),
+            output_html,
+        )?;
+    }
+
+    Ok(())
+}
+fn get_html_styling() -> String {
+    format!(
+        "
         <style>
             @font-face {{
                 font-family: 'IndoPak';
@@ -78,84 +102,5 @@ pub(crate) async fn handler(
             }}
         </style>
         ",
-        );
-        for verse in data.verses {
-            // println!("{:?}", verse.text_indopak);
-            // println!("{:?}", verse.verse_number);
-
-            let mut output_word = String::new();
-            for word in verse.words {
-                // output_word.push_str(&format!(
-                //     "{} \n {}.",
-                //     word.text,
-                //     word.translation
-                //         .text
-                //         .expect("failed to unwrap word.translation.text")
-                // ));
-
-                output_word.push_str(&format!(
-                    "{}. ",
-                    word.translation
-                        .text
-                        .expect("failed to unwrap word.translation.text")
-                ));
-            }
-            let translations = verse.translations[0].text.clone();
-            let footnotes = get_footnote(&translations).await?;
-
-            let output_verse = OutputVerse {
-                arabic_text: verse.text_indopak,
-                verse: verse.verse_number,
-                word_by_word: output_word,
-                translation: translations,
-                page_number: verse.page_number,
-                sajdah: {
-                    if verse.sajdah_number.is_some() {
-                        "sajdah".to_string()
-                    } else {
-                        "".to_string()
-                    }
-                },
-                footnotes,
-            };
-            output_html.push_str(&format!(
-                "
-            <div class=\"container\">
-                <table width=\"100%\">
-                    <tr>
-                        <td align=\"left\" style=\"white-space: nowrap;\">
-                            <span class=\"page\">Pg.{4}</span>
-                            <span class=\"sajdah\">{5}</span>
-                        </td>
-                        <td align=\"right\" style=\"white-space: nowrap;\">
-                            <span class=\"ayah\">{2}</span>
-                        </td>
-                    </tr>
-                </table>
-                <div class=\"arabic\">{0}</div>
-                <div class=\"wbw\">{1}</div>
-                <div class=\"translation\">{2}. {3}</div>
-                {6}
-            </div>",
-                output_verse.arabic_text,
-                output_verse.word_by_word,
-                output_verse.verse,
-                output_verse.translation,
-                output_verse.page_number,
-                output_verse.sajdah,
-                output_verse.footnotes
-            ));
-            output_json.push(output_verse);
-        }
-        // println!("{:?}", output);
-
-        // save a response
-        // let _res = std::fs::write("output/output.json", serde_json::to_string_pretty(&output_json)?)?;
-        let _res = std::fs::write(
-            format!("output/{}. {}.html", surah_number, surah_name),
-            output_html,
-        )?;
-    }
-
-    Ok(())
+    )
 }
