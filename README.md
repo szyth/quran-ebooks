@@ -1,12 +1,3 @@
-Todo
-- Add footnotes
-- Create front page with surah details
-- add author for epub
-- add support for multi translations
-- add support for tafsir
-- add tracing logs
-
-
 # Qurán for eReaders
 Features:
 - Quran Arabic. Indopak font
