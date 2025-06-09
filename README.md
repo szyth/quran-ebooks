@@ -10,8 +10,6 @@ Features:
 
 
 # Create EPUBs
-
-This is a 3 step process. This script does it all for you.
 - Login to `quran.com` API
 - Create HTMLs using EPUB-compatible `css` and `font`. This fetches all Surah content as JSON from `quran.com`. Includes core logic of this tool.
 - Convert these HTMLs into EPUB
@@ -28,22 +26,37 @@ cargo run -- --login
 - This will give you the Access Token, now store it in `.env`
 
 
-### 2. Generate HTMLs
+### 2. Get Arabic text and Translations 
 ```bash
 # For One Surah
-cargo run -- --generate-html --start-surah <Surah Number>
+cargo run -- --translations --start-surah <Surah Number>
 # example: 
-cargo run -- --generate-html --start-surah 67
+cargo run -- --translations --start-surah 67
 
 # For Multiple Surahs
-cargo run -- --generate-html --start-surah <Surah Number> --end-surah <Surah Number>
+cargo run -- --translations --start-surah <Surah Number> --end-surah <Surah Number>
 # example: 
-cargo run -- --generate-html --start-surah 1 --end-surah 114
+cargo run -- --translations --start-surah 1 --end-surah 114
 
 # Created HTMLs can be found in output folder
 ```
 
-### 3. Convert HTMLs to EPUB
+### 3. Get Tafsir
+```bash
+# For One Surah
+cargo run -- --tafsir --start-surah <Surah Number>
+# example: 
+cargo run -- --tafsir --start-surah 67
+
+# For Multiple Surahs
+cargo run -- --tafsir --start-surah <Surah Number> --end-surah <Surah Number>
+# example: 
+cargo run -- --tafsir --start-surah 1 --end-surah 114
+
+# Created HTMLs can be found in output folder
+```
+
+### 4. Convert HTMLs to EPUB
 ```bash
 # Install Calibre software, it comes with an `ebook-convert` plugin.
 # run the following shell command from root of project.
@@ -64,4 +77,3 @@ Open Book and from bottom right-most settings, enable Embedded Style and Embedde
 
 Credits:
 - All Data sourced from: https://www.quran.com
-- IndoPak font: https://github.com/marwan/indopak-quran-text
