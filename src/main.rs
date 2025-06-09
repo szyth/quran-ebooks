@@ -1,15 +1,17 @@
 use clap::{ArgGroup, CommandFactory, Parser};
+
+use crate::{tafsir::tafsir_html_generator, translations::translations_html_generator};
 mod env;
-mod html_generator;
 mod quran_com;
-mod verse;
+mod tafsir;
+mod translations;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
 #[command(group(
     ArgGroup::new("mode")
         .required(true)
-        .args([ "login", "generate_html"])
+        .args([ "login", "translations", "tafsir"])
 ))]
 
 struct Args {
@@ -17,21 +19,35 @@ struct Args {
     #[arg(long)]
     login: bool,
 
-    /// Generate HTMLs, to be used later for EPUBs
+    /// Get Arabic and Translations
     #[arg(long)]
-    generate_html: bool,
+    translations: bool,
 
-    /// Start surah (required with --generate-html), 1 to 114
+    /// Get Tafsir
+    #[arg(long)]
+    tafsir: bool,
+
+    /// Start surah (required with --translations), 1 to 114
     #[arg(long, value_parser = clap::value_parser!(u8).range(1..=114))]
     start_surah: Option<u8>,
 
-    /// End surah (optional with --generate-html), 1 to 114
+    /// End surah (optional with --translations), 1 to 114
     #[arg(long, value_parser = clap::value_parser!(u8).range(1..=114))]
     end_surah: Option<u8>,
 }
 
+async fn logs() {
+    let level: tracing::Level = std::env::var("RUST_LOG")
+        .unwrap_or_else(|_| "info".to_owned())
+        .parse()
+        .unwrap_or(tracing::Level::INFO);
+
+    tracing_subscriber::fmt().with_max_level(level).init();
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
+    logs().await;
     if dotenv::from_filename(".env").is_err() {
         eprintln!("Error: .env file not found. refer `sampleenv`for format.");
         std::process::exit(1)
@@ -56,8 +72,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
         let _ = quran_com::oauth2_token::handler().await;
     }
 
-    // GenerateHTMLs flow
-    if args.generate_html {
+    // Translations flow
+    if args.translations {
         if env::access_token().unwrap().is_empty() {
             // safe to use unwrap
             eprintln!("Error: Access Token missing in .env");
@@ -65,7 +81,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
         }
 
         if args.start_surah.is_none() {
-            eprintln!("Error: --generate-html requires --start-surah <START_SURAH>");
+            eprintln!("Error: --translations requires --start-surah <START_SURAH>");
             std::process::exit(1);
         }
 
@@ -78,9 +94,33 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
 
         let start_surah = args.start_surah.unwrap(); // safe to use unwrap
         let end_surah = args.end_surah.unwrap_or(start_surah);
-        let _ = html_generator::handler(start_surah, end_surah).await;
+        let _ = translations_html_generator::handler(start_surah, end_surah).await;
+    }
+    // Tafsir flow
+    if args.tafsir {
+        if env::access_token().unwrap().is_empty() {
+            // safe to use unwrap
+            eprintln!("Error: Access Token missing in .env");
+            std::process::exit(1)
+        }
+
+        if args.start_surah.is_none() {
+            eprintln!("Error: --tafsir requires --start-surah <START_SURAH>");
+            std::process::exit(1);
+        }
+
+        if let (Some(start), Some(end)) = (args.start_surah, args.end_surah) {
+            if start > end {
+                eprintln!("Error: --start-surah must be less than or equal to --end-surah");
+                std::process::exit(1);
+            }
+        }
+
+        let start_surah = args.start_surah.unwrap(); // safe to use unwrap
+        let end_surah = args.end_surah.unwrap_or(start_surah);
+        let _ = tafsir_html_generator::handler(start_surah, end_surah).await;
     }
 
-    println!("Success");
+    tracing::info!("Success");
     Ok(())
 }

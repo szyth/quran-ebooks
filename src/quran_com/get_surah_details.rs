@@ -6,13 +6,14 @@ pub(crate) struct SurahDetails {
     #[serde(rename = "transliteratedName")]
     pub(crate) transliterated_name: String,
     #[serde(rename = "revelationPlace")]
-    revelation_place: String,
+    pub(crate) revelation_place: String,
     #[serde(rename = "versesCount")]
-    verses_count: u32,
+    pub(crate) verses_count: u32,
     #[serde(rename = "translatedName")]
-    translated_name: String,
+    pub(crate) translated_name: String,
     slug: String,
 }
+#[tracing::instrument(skip_all)]
 pub(crate) fn handler(
     surah_number: u8,
 ) -> Result<SurahDetails, Box<dyn std::error::Error + Sync + Send>> {
