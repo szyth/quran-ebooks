@@ -6,6 +6,8 @@ use crate::env;
 pub(crate) enum Error {
     #[error("ReqWestError: {0}")]
     ReqWestError(#[from] reqwest::Error),
+    #[error("RegexError: {0}")]
+    RegexError(#[from] regex::Error),
 }
 
 #[derive(serde::Deserialize, Debug)]
@@ -22,13 +24,14 @@ struct Footnote {
 }
 pub(crate) async fn get_footnote(text: &String) -> Result<Vec<String>, Error> {
     let mut footnote: Vec<String> = vec![];
-    let re = Regex::new(r"<sup foot_note=(?<footnote>\d*)>").unwrap();
+    let re = Regex::new(r#"<sup\s+foot_note=(?:"|')?(?P<footnote>\d+)(?:"|')?>"#).unwrap();
     for caps in re.captures_iter(&text) {
         let url = format!(
             "{}/foot_notes/{}",
             env::api_url().unwrap(),
             &caps["footnote"]
         ); // safe to use unwrap
+        tracing::info!("Fetching footnotes on: {}", url);
 
         let mut headers = reqwest::header::HeaderMap::new();
         headers.insert("Referer", "https://quran.com".parse().unwrap()); // safe to use unwrap
