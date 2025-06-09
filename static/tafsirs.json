@@ -1,0 +1,25 @@
+[
+  {
+    "id": 0,
+    "resource_id": 159,
+    "resource_name": "تفسیر بیان القرآن",
+    "translated_name": "Bayan ul Quran",
+    "slug": "tafsir-bayan-ul-quran"
+  },
+
+  {
+    "id": 1,
+    "resource_id": 168,
+    "resource_name": "Ma'arif al-Qur'an",
+    "translated_name": "Ma'arif al-Qur'an",
+    "slug": "en-tafsir-maarif-ul-quran"
+  },
+
+  {
+    "id": 2,
+    "resource_id": 169,
+    "resource_name": "Ibn Kathir (Abridged)",
+    "translated_name": "Ibn Kathir (Abridged)",
+    "slug": "en-tafsir-ibn-kathir"
+  }
+]
