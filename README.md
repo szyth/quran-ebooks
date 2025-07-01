@@ -6,6 +6,9 @@ You can download the available eBooks from this folder:
 
 Then click on any file you want, and press the **Download** button (top right) on the file's page.
 
+![steps](https://github.com/user-attachments/assets/dae5f7d9-e1d9-4367-80e3-b81c2c4a8f4b)
+
+
 ---
 ### Or you can generate your custom ebooks by the following documentation: (only for Technical audience)
 
