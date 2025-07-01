@@ -6,8 +6,12 @@ Features:
 - Page number and Sajdah.
 - Tafsir support
 
+Snippet from Kobo eReader:
+![Reader_67  Al-Mulk epub_p2_2025-07-01_125848](https://github.com/user-attachments/assets/1c6f5fc0-dedd-4a16-869d-a233f3029dd3)
 
-# Create eBOOKs
+
+
+## Create eBOOKs
 
 This is a 3 step process. 
 - Login to `quran.com` API
