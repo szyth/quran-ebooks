@@ -16,7 +16,7 @@ pub(crate) struct Verse {
     manzil_number: u32,
     pub(crate) sajdah_number: Option<u32>,
     text_uthmani: String,
-    pub(crate) text_indopak: String,
+    pub(crate) text_indopak_nastaleeq: String,
     pub(crate) page_number: u32,
     juz_number: u32,
     pub(crate) translations: Vec<Translation>,
@@ -32,7 +32,7 @@ pub(crate) struct Word {
     verse_id: u32,
     location: String,
     pub(crate) text_uthmani: String,
-    pub(crate) text_indopak: String,
+    pub(crate) text_indopak_nastaleeq: String,
     text: String,
     page_number: u32,
     line_number: u32,
@@ -79,7 +79,10 @@ impl Verse {
     }
 
     pub(crate) fn get_arabic_indopak(&self) -> String {
-        format!("<div class=\"arabic\">{}</div>", self.text_indopak)
+        format!(
+            "<div class=\"arabic\">{}</div>",
+            self.text_indopak_nastaleeq
+        )
     }
     pub(crate) fn get_arabic_uthmani(self) -> String {
         format!("<div class=\"arabic\">{}</div>", self.text_uthmani)
@@ -116,7 +119,7 @@ impl Verse {
             // ));
 
             wbw_html.push_str(&format!(
-                "{}.",
+                "{}. ",
                 word.translation
                     .text
                     .clone()

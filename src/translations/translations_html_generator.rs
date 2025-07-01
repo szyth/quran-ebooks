@@ -101,30 +101,12 @@ fn get_html_styling() -> String {
                 font-size: 2em;
                 line-height: 1.5;
                 font-family: 'IndoPak', sans-serif;
+                direction: rtl;
             }}
             .wbw {{
                 font-size: 0.8em;
                 margin-top: 5px;
                 margin-bottom: 2px;
-                /* display: flex; */
-                /* gap: 2em; */
-                /* direction: rtl; */
-            }}
-
-            .wbw .word_wrapper {{
-                display: flex;
-                flex-direction: column;
-                text-align: center;
-            }}
-
-            .wbw .word_wrapper .word_arabic {{
-                font-family: 'IndoPak', sans-serif;
-
-            }}
-
-            .wbw .word_wrapper .word_eng {{
-                unicode-bidi: isolate;
-                direction: ltr;
             }}
 
             .translation {{

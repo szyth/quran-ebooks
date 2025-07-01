@@ -8,7 +8,7 @@ pub(crate) async fn handler(
     start_surah: u8,
     end_surah: u8,
 ) -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
-    let resource_id = 168;
+    let resource_id = 169; // hardcoded tafsir ID. refer folder static/tafsirs.json for tafsir ID.
     for surah_number in start_surah..=end_surah {
         tracing::info!(
             "Initiate Tafsir HTML generation for Surah number: {}",
@@ -92,6 +92,7 @@ fn get_html_styling() -> String {
                 font-size: 2em;
                 line-height: 1.5;
                 font-family: 'IndoPak', sans-serif;
+                direction: rtl;
             }}
                              
         </style>

@@ -25,9 +25,9 @@ pub(crate) async fn handler(
     params.insert("words", "true");
     params.insert(
         "word_fields",
-        "verse_key,verse_id,page_number,location,text_uthmani,text_indopak,qpc_uthmani_hafs",
+        "verse_key,verse_id,page_number,location,text_uthmani,text_indopak_nastaleeq,qpc_uthmani_hafs",
     );
-    params.insert("fields", "text_uthmani,text_indopak");
+    params.insert("fields", "text_uthmani,text_indopak_nastaleeq");
     params.insert("per_page", "1000");
 
     let res = reqwest::Client::new()
