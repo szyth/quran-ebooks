@@ -1,4 +1,15 @@
-# Qurán for eReaders
+### 📘 Download eBooks
+
+You can download the available eBooks from this folder:
+
+👉 [Click here to open the `download-ebooks` folder](https://github.com/szyth/quran-ebook-generator/tree/main/download-ebooks)
+
+Then click on any file you want, and press the **Download** button (top right) on the file's page.
+
+---
+### Or you can generate your custom ebooks by the following documentation: (only for Technical audience)
+
+### Qurán for eReaders
 Features:
 - Quran Arabic. Indopak font
 - Word by Word translation
