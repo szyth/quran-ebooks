@@ -2,9 +2,9 @@
 
 You can download the available eBooks from this folder:
 
-👉 [Click here to open the `download-ebooks` folder](https://github.com/szyth/quran-ebook-generator/tree/main/download-ebooks)
+👉 [Click here to open the Google Drive `quran-arabic-with-translation-sahih-international` folder]([https://github.com/szyth/quran-ebook-generator/tree/main/download-ebooks](https://drive.google.com/drive/folders/1RQ7F3-RSJ_uS9wJMIiVAa1d_gigpGpFk?usp=sharing))
 
-Then click on any file you want, and press the **Download** button (top right) on the file's page.
+Then click on any file you want, and press the **Download** button.
 
 #### Kindle/Kobo Setup after downloading eBook:
 - Use [KOReader](https://koreader.rocks/) app to render arabic properly.
