@@ -6,6 +6,9 @@ You can download the available eBooks from this folder:
 
 Then click on any file you want, and press the **Download** button.
 
+Please report any issues or bugs at sayyedziaur@gmail.com
+
+---
 #### Kindle/Kobo Setup after downloading eBook:
 - Use [KOReader](https://koreader.rocks/) app to render arabic properly.
   - in KOReader: Set Render Mode: Book and Enable: Embedded Style, Embedded Fonts.
