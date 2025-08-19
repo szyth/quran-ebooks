@@ -51,7 +51,7 @@ pub(crate) async fn handler(
         tracing::info!("Storing HTML data here: {filename}",);
         // save a response
         if let Err(e) = std::fs::write(filename, output_html) {
-            eprintln!("Error: Failed to write to file: {:#?}", e);
+            tracing::error!("Error: Failed to write to file: {:#?}", e);
             std::process::exit(1)
         }
     }

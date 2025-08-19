@@ -20,7 +20,7 @@ pub(crate) fn handler(
         .position(|tafsir| tafsir.resource_id == resource_id);
 
     if tafsir_index.is_none() {
-        eprintln!("Error: Failed to fetch tafsir details from `static/tafsirs.json`");
+        tracing::error!("Error: Failed to fetch tafsir details from `static/tafsirs.json`");
         std::process::exit(1)
     }
     let tafsir_index = tafsir_index.unwrap(); // safe to use unwrap()

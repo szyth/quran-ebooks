@@ -49,11 +49,11 @@ async fn logs() {
 async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
     logs().await;
     if dotenv::from_filename(".env").is_err() {
-        eprintln!("Error: .env file not found. refer `sampleenv`for format.");
+        tracing::error!("Error: .env file not found. refer `sampleenv`for format.");
         std::process::exit(1)
     }
     if env::check_envs().is_none() {
-        eprintln!("Error: ENV variable expected.");
+        tracing::error!("Error: ENV variable expected.");
         std::process::exit(1)
     }
 
@@ -76,18 +76,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
     if args.translations {
         if env::access_token().unwrap().is_empty() {
             // safe to use unwrap
-            eprintln!("Error: Access Token missing in .env");
+            tracing::error!("Error: Access Token missing in .env");
             std::process::exit(1)
         }
 
         if args.start_surah.is_none() {
-            eprintln!("Error: --translations requires --start-surah <START_SURAH>");
+            tracing::error!("Error: --translations requires --start-surah <START_SURAH>");
             std::process::exit(1);
         }
 
         if let (Some(start), Some(end)) = (args.start_surah, args.end_surah) {
             if start > end {
-                eprintln!("Error: --start-surah must be less than or equal to --end-surah");
+                tracing::error!("Error: --start-surah must be less than or equal to --end-surah");
                 std::process::exit(1);
             }
         }
@@ -100,18 +100,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
     if args.tafsir {
         if env::access_token().unwrap().is_empty() {
             // safe to use unwrap
-            eprintln!("Error: Access Token missing in .env");
+            tracing::error!("Error: Access Token missing in .env");
             std::process::exit(1)
         }
 
         if args.start_surah.is_none() {
-            eprintln!("Error: --tafsir requires --start-surah <START_SURAH>");
+            tracing::error!("Error: --tafsir requires --start-surah <START_SURAH>");
             std::process::exit(1);
         }
 
         if let (Some(start), Some(end)) = (args.start_surah, args.end_surah) {
             if start > end {
-                eprintln!("Error: --start-surah must be less than or equal to --end-surah");
+                tracing::error!("Error: --start-surah must be less than or equal to --end-surah");
                 std::process::exit(1);
             }
         }

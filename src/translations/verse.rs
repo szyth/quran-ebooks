@@ -73,8 +73,7 @@ impl Verse {
         surah_number: u8,
     ) -> Result<Data, Box<dyn std::error::Error + Sync + Send>> {
         tracing::info!("Fetching Verses from quran.com server");
-        let res = crate::quran_com::get_verses_by_chapter::handler(surah_number).await?;
-        let data: Data = serde_json::from_value(res)?;
+        let data = crate::quran_com::get_verses_by_chapter::handler(surah_number).await?;
         Ok(data)
     }
 
@@ -180,7 +179,7 @@ async fn get_translation_footnote(
 
     let mut footnote_html: String = String::new();
     for (index, footnote) in footnotes.iter().enumerate() {
-        footnote_html.push_str(&format!("Footnote {}: {}", index + 1, footnote));
+        footnote_html.push_str(&format!("Footnote {}: {}\n", index + 1, footnote));
     }
     if !footnote_html.is_empty() {
         footnote_html = format!("<div class=\"footnote\">{}</div>", footnote_html);

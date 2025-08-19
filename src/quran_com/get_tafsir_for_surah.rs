@@ -34,8 +34,8 @@ pub(crate) async fn handler(
         .await;
 
     if res.is_err() {
-        eprintln!("Error: Failed to fetch data from quran.com server.");
-        eprintln!("{:#?}", res);
+        tracing::error!("Error: Failed to fetch data from quran.com server.");
+        tracing::error!("{:#?}", res);
         std::process::exit(1)
     }
 

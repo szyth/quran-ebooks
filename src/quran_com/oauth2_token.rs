@@ -32,7 +32,7 @@ pub(crate) async fn handler() -> Result<(), Box<dyn std::error::Error>> {
         .await;
 
     if res.is_err() {
-        eprintln!("Error: Login failed");
+        tracing::error!("Error: Login failed");
         std::process::exit(1)
     }
 

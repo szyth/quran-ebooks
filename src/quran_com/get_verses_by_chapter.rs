@@ -1,4 +1,4 @@
-use crate::env;
+use crate::{env, translations::verse};
 use std::collections::HashMap;
 
 // official docs:
@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 pub(crate) async fn handler(
     surah_number: u8,
-) -> Result<serde_json::Value, Box<dyn std::error::Error + Sync + Send>> {
+) -> Result<verse::Data, Box<dyn std::error::Error + Sync + Send>> {
     let url = format!(
         "{}/verses/by_chapter/{}",
         env::api_url().unwrap(),
@@ -20,7 +20,7 @@ pub(crate) async fn handler(
     headers.insert("x-client-id", env::client_id().unwrap().parse()?); // safe to use unwrap
 
     let mut params = HashMap::new();
-    params.insert("translations", "131");
+    params.insert("translations", "20");
     params.insert("translation_fields", "verse_number,page_number");
     params.insert("words", "true");
     params.insert(
@@ -36,12 +36,12 @@ pub(crate) async fn handler(
         .query(&params)
         .send()
         .await?
-        .json::<serde_json::Value>()
+        .json::<verse::Data>()
         .await;
 
     if res.is_err() {
-        eprintln!("Error: Failed to fetch data from quran.com server.");
-        eprintln!("{:#?}", res);
+        tracing::error!("Error: Failed to fetch data from quran.com server.");
+        tracing::error!("{:#?}", res);
         std::process::exit(1)
     }
 

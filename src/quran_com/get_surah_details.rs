@@ -23,13 +23,13 @@ pub(crate) fn handler(
     let index = list.get(surah_number as usize - 1);
 
     if index.is_none() {
-        eprintln!("Error: Failed to fetch surah details from `static/quran_surahs.json`");
+        tracing::error!("Error: Failed to fetch surah details from `static/quran_surahs.json`");
         std::process::exit(1)
     }
     let index = index.unwrap(); // safe to use unwrap()
 
     if index.id != surah_number {
-        eprintln!("Error: Invalid data in `static/quran_surahs.json`");
+        tracing::error!("Error: Invalid data in `static/quran_surahs.json`");
         std::process::exit(1)
     }
 
