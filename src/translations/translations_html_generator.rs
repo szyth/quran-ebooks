@@ -18,11 +18,21 @@ pub(crate) async fn handler(
 
         // surah cover page
         tracing::info!("Creating cover page");
+
+        let mut tauz_tasmiya = format!(
+            "
+                <div class=\"arabic\">أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيۡطَـٰنِ ٱلرَّجِيمِ</div>
+                <div class=\"arabic\">بِسۡمِ اللهِ الرَّحۡمٰنِ الرَّحِيۡمِ</div>
+            "
+        );
+        // dont include tauz-tasmiya in Surah Tawbah ie surah 9
+        if surah_number == 9 {
+            tauz_tasmiya = "".into();
+        }
         output_html.push_str(&format!(
             "
             <div class=\"cover\">
-                <div class=\"arabic\">أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيۡطَـٰنِ ٱلرَّجِيمِ</div>
-                <div class=\"arabic\">بِسۡمِ اللهِ الرَّحۡمٰنِ الرَّحِيۡمِ</div>
+                {tauz_tasmiya}
                 <div>Surah {0} | {1}</div>
                 <div>Verses: {2}</div>
                 <div>Revelation: {3}</div>
@@ -38,10 +48,10 @@ pub(crate) async fn handler(
         for verse in data.verses {
             output_html.push_str(&format!(
                 "<div class=\"container\">
-                    {0}
-                    {1}
-                    {2}
-                    {3}
+                    {}
+                    {}
+                    {}
+                    {}
                 </div>
                 ",
                 verse.get_header(), // page number, sajdah, ayah
@@ -58,7 +68,7 @@ pub(crate) async fn handler(
         tracing::info!("Storing HTML data here: {filename}",);
         // save a response
         if let Err(e) = std::fs::write(filename, output_html) {
-            eprintln!("Error: Failed to write to file: {:#?}", e);
+            tracing::error!("Error: Failed to write to file: {:#?}", e);
             std::process::exit(1)
         }
     }
