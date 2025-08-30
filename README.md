@@ -14,7 +14,7 @@ Please report any issues or bugs at the email provided in the Google Drive link 
 
 ### Qurán for eReaders
 Features:
-- Quran Arabic. Indopak font
+- Quran Arabic. Indopak Nastaleeq Waqf Lazim font
 - Word by Word translation
 - English translations supported.
 - Page number and Sajdah.
@@ -27,22 +27,22 @@ Snippet from Kobo eReader:
 
 ## Create eBOOKs
 
-This is a 3 step process. 
-- Login to `quran.com` API
-- Create HTMLs of Translations or Tafsir. This fetches all Surah content as JSON from `quran.com`. Includes core logic of this tool.
-- Convert these HTMLs into EPUB or PDF.
-  - PDF is recommned for most users, as EPUB will require an `KoReader` installation in eReaders.
+This is a 3 step process:
+1. Login to `quran.com` API
+2. Create HTMLs of Translations or Tafsir. This fetches all Surah content as JSON from `quran.com` which is then converted into HTML. Includes core logic of this tool.
+3. Convert these HTMLs into PDF or EPUB.
+    1. PDF is recommended for most users, as EPUB will require an additional installation of `KoReader` app in eReaders to properly render fonts. Default eReader don't support these fonts.
 
+  
 ### 1. Login
-- Create `.env` using your API creds
+- Create `.env` using your API credentials (get API access from here https://api-docs.quran.foundation/request-access)
     - refer `sampleenv` for format
-    - enter your client ID and client Secret, leave the access token empty.
-    - You can request API access from here https://api-docs.quran.foundation/request-access
+    - enter your client ID and client Secret, leave the access token field empty.
 
 ```bash
 cargo run -- --login
 ```
-- This will give you the Access Token, now store it in `.env`
+- This will give you the Access Token, now store it in `.env` under the access token field.
 
 
 ### 2. Generate HTMLs for Translation or Tafsir
@@ -50,7 +50,7 @@ cargo run -- --login
 cargo run -- --translations --start-surah 1 --end-surah 114
 cargo run -- --tafsir       --start-surah 1 --end-surah 114
 
-# Created HTMLs can be found in output folder
+# Created HTMLs can be found in `output/` folder
 ```
 
 ### 3a. Convert HTMLs to PDFs
@@ -59,11 +59,10 @@ cargo run -- --tafsir       --start-surah 1 --end-surah 114
 # run the following shell command from root of project.
 mkdir -p pdfs && for f in output/*.html; do ebook-convert "$f" "pdfs/$(basename "${f%.html}.pdf")" --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15; done
 
-# or do manually with the following (make sure `fonts` folder should exist in the same directory as of `filename.html`)
-ebook-convert filename.html filename.pdf   --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15
+# Created PDFs can be found in `pdfs` folder
 
-# Created EPUBs can be found in `pdfs` folder
-
+# or do manually with the following command. (make sure `fonts` folder should exist in the same directory as of `filename.html`)
+ebook-convert filename.html filename.pdf --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15
 ```
 
 
@@ -71,23 +70,19 @@ ebook-convert filename.html filename.pdf   --disable-font-rescaling --pdf-defaul
 ```bash
 # Install Calibre software, it comes with an `ebook-convert` plugin.
 # run the following shell command from root of project.
-mkdir -p ebooks && for f in output/*.html; do ebook-convert "$f" "ebooks/$(basename "${f%.html}.epub")" --disable-font-rescaling; done
+mkdir -p epubs && for f in output/*.html; do ebook-convert "$f" "epubs/$(basename "${f%.html}.epub")" --disable-font-rescaling; done
 
-# or do manually with the following (make sure `fonts` folder should exist in the same directory as of `filename.html`)
+# Created EPUBs can be found in `epubs` folder
+
+# or do manually with the following command. (make sure `fonts` folder should exist in the same directory as of `filename.html`)
 ebook-convert filename.html filename.epub --disable-font-rescaling
-
-# Created EPUBs can be found in `ebooks` folder
 ```
-#### Kindle/Kobo Setup after downloading eBook:
+#### Kindle/Kobo Setup after downloading EPUB:
 - Use [KOReader](https://koreader.rocks/) app to render arabic properly.
   - in KOReader: Set `Render Mode: Book` and `Enable: Embedded Style, Embedded Fonts`
 
 
-
-
-
-
-
+---
 
 Credits:
 - All Data sourced from: https://www.quran.com
