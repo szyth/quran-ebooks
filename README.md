@@ -64,7 +64,7 @@ mkdir -p pdfs && for f in output/*.html; do ebook-convert "$f" "pdfs/$(basename 
 # OR, do manually with the following command. (make sure `fonts` folder should exist in the same directory as of `filename.html`)
 ebook-convert filename.html filename.pdf --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15
 
-# OR, you can manually drag-and-drop the HTML into Calibre software and click on Convert. Make sure to 'Disable Font Rescaling, PDF Default Font Size: 32, PDF Margin Top Bottom Right Left: 10'
+# OR, you can manually drag-and-drop the HTML into Calibre software and click on Convert. Make sure to 'Disable Font Rescaling, PDF Default Font Size: 32, PDF Margin Top Bottom Right Left: 15'
 ```
 
 
