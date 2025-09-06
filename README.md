@@ -6,8 +6,13 @@ You can download the available eBooks from this folder:
 
 Then click on any file you want, and press the **Download** button.
 
-Please report any issues or bugs at the email provided in the Google Drive link above.
+IMPORTANT NOTE: Quran EPUB files needs additional setup, watch my Youtube video for tutorial: https://youtu.be/Jret-648FZ4
 
+If you find this video hard to follow, then download the Quran PDF that works without any additional setup.
+
+
+---
+Please report any issues or bugs at the email provided in the Google Drive link above.
 
 ---
 ### Or you can generate your custom ebooks by the following documentation: (only for Technical audience)
