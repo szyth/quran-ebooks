@@ -6,9 +6,9 @@ You can download the available eBooks from this folder:
 
 Then click on any file you want, and press the **Download** button.
 
-IMPORTANT NOTE: Quran EPUB files needs additional setup, watch my Youtube video for tutorial: https://youtu.be/Jret-648FZ4
-
-If you find this video hard to follow, then download the Quran PDF that works without any additional setup.
+IMPORTANT NOTE: 
+- You can download either Quran PDF or EPUB version. But EPUB version needs an additional setup, unlike PDFs. 
+- Watch my Youtube video for EPUB tutorial: https://youtu.be/Jret-648FZ4
 
 
 ---
@@ -21,8 +21,8 @@ Please report any issues or bugs at the email provided in the Google Drive link 
 Features:
 - Quran Arabic. Indopak Nastaleeq Waqf Lazim font
 - Word by Word translation
-- English translations supported.
-- Page number and Sajdah.
+- English translations supported
+- Page number and Sajdah
 - Tafsir support
 
 Snippet from Kobo eReader:
@@ -33,21 +33,15 @@ Snippet from Kobo eReader:
 ## Create eBOOKs
 
 This is a 3 step process:
-1. Login to `quran.com` API
+1. Setup a `.env` file.
 2. Create HTMLs of Translations or Tafsir. This fetches all Surah content as JSON from `quran.com` which is then converted into HTML. Includes core logic of this tool.
 3. Convert these HTMLs into PDF or EPUB.
     1. PDF is recommended for most users, as EPUB will require an additional installation of `KoReader` app in eReaders to properly render fonts. Default eReader don't support these fonts.
 
   
-### 1. Login
-- Create `.env` using your API credentials (get API access from here https://api-docs.quran.foundation/request-access)
-    - refer `sampleenv` for format
-    - enter your client ID and client Secret, leave the access token field empty.
-
-```bash
-cargo run -- --login
-```
-- This will give you the Access Token, now store it in `.env` under the access token field.
+### 1. Setup .env file:
+- Get API Access from https://api-docs.quran.foundation/request-access
+- Create `.env` using above API credentials, refer `sampleenv` file for format.
 
 
 ### 2. Generate HTMLs for Translation or Tafsir
