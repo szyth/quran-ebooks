@@ -1,21 +1,39 @@
-use crate::{
-    quran_com::{get_surah_details, get_tafsir_details},
-    tafsir::tafsir::Tafsir,
+use crate::quran_com::types::{
+    surah_details,
+    tafsir::{self, Tafsir},
+    tafsir_details, verse,
 };
 
+#[derive(thiserror::Error, Debug)]
+pub(crate) enum Error {
+    #[error("ReqWestError: {0}")]
+    ReqWestError(#[from] reqwest::Error),
+    #[error("RegexError: {0}")]
+    RegexError(#[from] regex::Error),
+
+    #[error("SurahDetails: {0}")]
+    SurahDetails(#[from] surah_details::Error),
+
+    #[error("TafsirDetailsError: {0}")]
+    TafsirDetailsError(#[from] tafsir_details::Error),
+
+    #[error("TafsirError: {0}")]
+    TafsirError(#[from] tafsir::Error),
+
+    #[error("IOError: {0}")]
+    IOError(#[from] std::io::Error),
+}
+
 #[tracing::instrument(skip_all)]
-pub(crate) async fn handler(
-    start_surah: u8,
-    end_surah: u8,
-) -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
+pub(crate) async fn handler(start_surah: u8, end_surah: u8) -> Result<(), Error> {
     let resource_id = 169; // hardcoded tafsir ID. refer folder static/tafsirs.json for tafsir ID.
     for surah_number in start_surah..=end_surah {
         tracing::info!(
             "Initiate Tafsir HTML generation for Surah number: {}",
             surah_number
         );
-        let surah_details = get_surah_details::handler(surah_number)?;
-        let tafsir_details = get_tafsir_details::handler(resource_id)?;
+        let surah_details = surah_details::handler(surah_number)?;
+        let tafsir_details = tafsir_details::handler(resource_id)?;
         tracing::info!("Fetched {:#?}", surah_details);
         let data = Tafsir::by_surah(surah_number, resource_id).await?;
 
@@ -50,10 +68,7 @@ pub(crate) async fn handler(
         );
         tracing::info!("Storing HTML data here: {filename}",);
         // save a response
-        if let Err(e) = std::fs::write(filename, output_html) {
-            tracing::error!("Error: Failed to write to file: {:#?}", e);
-            std::process::exit(1)
-        }
+        let _write = std::fs::write(filename, output_html)?;
     }
 
     Ok(())

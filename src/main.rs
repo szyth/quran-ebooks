@@ -1,24 +1,21 @@
 use clap::{ArgGroup, CommandFactory, Parser};
 
-use crate::{tafsir::tafsir_html_generator, translations::translations_html_generator};
+use crate::utils::http::{ACCESS_TOKEN, HTTP_CLIENT};
 mod env;
 mod quran_com;
 mod tafsir;
 mod translations;
+mod utils;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
 #[command(group(
     ArgGroup::new("mode")
         .required(true)
-        .args([ "login", "translations", "tafsir"])
+        .args([ "translations", "tafsir"])
 ))]
 
 struct Args {
-    /// Login to quran.com API and get AccessToken
-    #[arg(long)]
-    login: bool,
-
     /// Get Arabic and Translations
     #[arg(long)]
     translations: bool,
@@ -64,22 +61,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
         std::process::exit(0);
     }
 
+    // build global reqWest HTTP client
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(10))
+        .build()?;
+    HTTP_CLIENT
+        .set(client)
+        .expect("ERROR: failed to create http client");
+
+    // Login and store token globally
+    let token = quran_com::apis::oauth2_token::handler().await;
+    if token.is_err() {
+        tracing::error!("Error: Failed to login.");
+        std::process::exit(1)
+    }
+    let token = token.unwrap(); // safe to use unwrap
+    ACCESS_TOKEN
+        .set(token.clone())
+        .expect("ERROR: failed to store access token");
+
     // Parse Args
     let args = Args::parse();
 
-    // Login flow
-    if args.login {
-        let _ = quran_com::oauth2_token::handler().await;
-    }
-
     // Translations flow
     if args.translations {
-        if env::access_token().unwrap().is_empty() {
-            // safe to use unwrap
-            tracing::error!("Error: Access Token missing in .env");
-            std::process::exit(1)
-        }
-
         if args.start_surah.is_none() {
             tracing::error!("Error: --translations requires --start-surah <START_SURAH>");
             std::process::exit(1);
@@ -94,16 +99,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
 
         let start_surah = args.start_surah.unwrap(); // safe to use unwrap
         let end_surah = args.end_surah.unwrap_or(start_surah);
-        let _ = translations_html_generator::handler(start_surah, end_surah).await;
+        if let Err(e) = translations::generate_html::handler(start_surah, end_surah).await {
+            tracing::error!("Error: {e}");
+            std::process::exit(1);
+        }
     }
     // Tafsir flow
     if args.tafsir {
-        if env::access_token().unwrap().is_empty() {
-            // safe to use unwrap
-            tracing::error!("Error: Access Token missing in .env");
-            std::process::exit(1)
-        }
-
         if args.start_surah.is_none() {
             tracing::error!("Error: --tafsir requires --start-surah <START_SURAH>");
             std::process::exit(1);
@@ -118,7 +120,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
 
         let start_surah = args.start_surah.unwrap(); // safe to use unwrap
         let end_surah = args.end_surah.unwrap_or(start_surah);
-        let _ = tafsir_html_generator::handler(start_surah, end_surah).await;
+        if let Err(e) = tafsir::generate_html::handler(start_surah, end_surah).await {
+            tracing::error!("Error: {e}");
+            std::process::exit(1);
+        }
     }
 
     tracing::info!("Success");

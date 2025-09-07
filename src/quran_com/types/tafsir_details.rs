@@ -8,10 +8,17 @@ pub(crate) struct TafsirDetails {
     pub(crate) translated_name: String,
     slug: String,
 }
+
+#[derive(thiserror::Error, Debug)]
+pub(crate) enum Error {
+    #[error("JSONParse error: {0}")]
+    JSONParseError(#[from] serde_json::Error),
+    #[error("ReadFromFile error: {0}")]
+    ReadFromFileError(#[from] std::io::Error),
+}
+
 #[tracing::instrument(skip_all)]
-pub(crate) fn handler(
-    resource_id: usize,
-) -> Result<TafsirDetails, Box<dyn std::error::Error + Sync + Send>> {
+pub(crate) fn handler(resource_id: usize) -> Result<TafsirDetails, Error> {
     let list_raw = std::fs::read_to_string("static/tafsirs.json")?;
     let list: Vec<TafsirDetails> = serde_json::from_str(&list_raw)?;
 

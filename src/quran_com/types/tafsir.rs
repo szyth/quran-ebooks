@@ -1,3 +1,5 @@
+use crate::quran_com::apis::get_tafsir_for_surah;
+
 #[derive(serde::Deserialize, Debug)]
 pub(crate) struct Data {
     pub(crate) tafsirs: Vec<Tafsir>,
@@ -19,15 +21,18 @@ pub(crate) struct Tafsir {
     language_id: usize,
     pub(crate) text: String,
 }
-
+#[derive(thiserror::Error, Debug)]
+pub(crate) enum Error {
+    #[error("JSONParseError: {0}")]
+    JSONParseError(#[from] serde_json::Error),
+    #[error("GetTafsirForSurahError: {0}")]
+    GetTafsirForSurahError(#[from] get_tafsir_for_surah::Error),
+}
 impl Tafsir {
-    pub(crate) async fn by_surah(
-        surah_number: u8,
-        resource_id: usize,
-    ) -> Result<Data, Box<dyn std::error::Error + Sync + Send>> {
+    pub(crate) async fn by_surah(surah_number: u8, resource_id: usize) -> Result<Data, Error> {
         tracing::info!("Fetching Verses from quran.com server");
-        let res =
-            crate::quran_com::get_tafsir_for_surah::handler(surah_number, resource_id).await?;
+        let res = crate::quran_com::apis::get_tafsir_for_surah::handler(surah_number, resource_id)
+            .await?;
         let data: Data = serde_json::from_value(res)?;
         Ok(data)
     }

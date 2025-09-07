@@ -1,4 +1,4 @@
-use crate::env;
+use crate::{env, utils::http::HTTP_CLIENT};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -9,17 +9,26 @@ struct LoginResponse {
     scope: String,
     token_type: String,
 }
-
+#[derive(thiserror::Error, Debug)]
+pub(crate) enum Error {
+    #[error("Header parse error: {0}")]
+    InvalidHeader(#[from] reqwest::header::InvalidHeaderValue),
+    #[error("ReqWestError: {0}")]
+    ReqWestError(#[from] reqwest::Error),
+    #[error("JSONParseError: {0}")]
+    JSONParseError(#[from] serde_json::Error),
+}
 // official docs:
 // https://api-docs.quran.foundation/docs/oauth2_apis_versioned/oauth-2-token-exchange
 
-pub(crate) async fn handler() -> Result<(), Box<dyn std::error::Error>> {
+pub(crate) async fn handler() -> Result<String, Error> {
     let url = format!("{}/oauth2/token", env::auth_url().unwrap()); // safe to use unwrap
     let mut params = HashMap::new();
     params.insert("grant_type", "client_credentials");
     params.insert("scope", "content");
 
-    let res = reqwest::Client::new()
+    let client = HTTP_CLIENT.get().expect("HTTP_CLIENT not initialized");
+    let body = client
         .post(url)
         .basic_auth(
             env::client_id().unwrap(),           // safe to use unwrap
@@ -28,18 +37,15 @@ pub(crate) async fn handler() -> Result<(), Box<dyn std::error::Error>> {
         .form(&params) // set Content-Type: application/x-www-form-urlencoded
         .send()
         .await?
-        .json::<LoginResponse>()
-        .await;
+        .text()
+        .await?;
 
-    if res.is_err() {
-        tracing::error!("Error: Login failed");
-        std::process::exit(1)
-    }
+    let parsed: LoginResponse = serde_json::from_str(&body.clone()).map_err(|e| {
+        tracing::error!("Raw quran.com API response: {}", body);
+        e
+    })?;
 
-    println!(
-        "Please update .env with this Access Token: \n\n{}",
-        res.unwrap().access_token // safe to use unwrap
-    );
+    tracing::info!("Login Successful. Access Token: \n{}", parsed.access_token);
 
-    Ok(())
+    Ok(parsed.access_token)
 }

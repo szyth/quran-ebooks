@@ -1,7 +1,7 @@
-use crate::quran_com;
+use crate::quran_com::apis::{get_footnote, get_verses_by_chapter};
 
 #[derive(serde::Deserialize, Debug)]
-pub(crate) struct Data {
+pub(crate) struct VerseData {
     pub(crate) verses: Vec<Verse>,
     pagination: Pagination,
 }
@@ -32,7 +32,7 @@ pub(crate) struct Word {
     verse_id: u32,
     location: String,
     pub(crate) text_uthmani: String,
-    pub(crate) text_indopak_nastaleeq: String,
+    // pub(crate) text_indopak_nastaleeq: String,
     text: String,
     page_number: u32,
     line_number: u32,
@@ -68,16 +68,29 @@ struct Pagination {
     total_records: u32,
 }
 
+#[derive(thiserror::Error, Debug)]
+pub(crate) enum Error {
+    #[error("ReqWestError: {0}")]
+    ReqWestError(#[from] reqwest::Error),
+    #[error("RegexError: {0}")]
+    RegexError(#[from] regex::Error),
+
+    #[error("GetVerseByChapterError: {0}")]
+    GetVerseByChapterError(#[from] get_verses_by_chapter::Error),
+
+    #[error("FootnoteError: {0}")]
+    FootnoteError(#[from] get_footnote::Error),
+}
+
 impl Verse {
-    pub(crate) async fn by_surah(
-        surah_number: u8,
-    ) -> Result<Data, Box<dyn std::error::Error + Sync + Send>> {
+    pub(crate) async fn by_surah(surah_number: u8) -> Result<VerseData, Error> {
         tracing::info!("Fetching Verses from quran.com server");
-        let data = crate::quran_com::get_verses_by_chapter::handler(surah_number).await?;
+        let data = crate::quran_com::apis::get_verses_by_chapter::handler(surah_number).await?;
         Ok(data)
     }
 
     pub(crate) fn get_arabic_indopak(&self) -> String {
+        tracing::debug!("Inside get_arabic_indopak()");
         format!(
             "<div class=\"arabic\">{}</div>",
             self.text_indopak_nastaleeq
@@ -87,6 +100,7 @@ impl Verse {
         format!("<div class=\"arabic\">{}</div>", self.text_uthmani)
     }
     pub(crate) fn get_word_by_word(&self) -> String {
+        tracing::debug!("Inside get_word_by_word()");
         let mut wbw_html = String::new();
         for word in &self.words {
             // Arabic with English RTL, works on Calibre, but not on eReaders due to modern CSS.
@@ -138,6 +152,7 @@ impl Verse {
         "".to_string()
     }
     pub(crate) fn get_header(&self) -> String {
+        tracing::debug!("Inside get_header()");
         format!(
             "<table width=\"100%\">
                     <tr>
@@ -155,9 +170,8 @@ impl Verse {
             self.verse_number
         )
     }
-    pub(crate) async fn get_translations(
-        self,
-    ) -> Result<String, Box<dyn std::error::Error + Sync + Send>> {
+    pub(crate) async fn get_translations(self) -> Result<String, Error> {
+        tracing::debug!("Inside get_translations()");
         let mut translation_html: String = String::new();
         for translation in self.translations.iter() {
             translation_html.push_str(&format!(
@@ -166,20 +180,19 @@ impl Verse {
                 ",
                 self.get_verse_number(),
                 translation.text,
-                get_translation_footnote(&translation.text).await?
+                get_translation_footnote(&translation.text,).await?
             ));
         }
         Ok(translation_html)
     }
 }
-async fn get_translation_footnote(
-    translation: &String,
-) -> Result<String, Box<dyn std::error::Error + Sync + Send>> {
-    let footnotes = quran_com::footnote::get_footnote(translation).await?;
+async fn get_translation_footnote(translation: &str) -> Result<String, Error> {
+    tracing::debug!("Inside get_translation_footnote()");
+    let footnotes = get_footnote::handler(translation).await?;
 
     let mut footnote_html: String = String::new();
     for (index, footnote) in footnotes.iter().enumerate() {
-        footnote_html.push_str(&format!("Footnote {}: {}\n", index + 1, footnote));
+        footnote_html.push_str(&format!("Footnote {}: {}<br>", index + 1, footnote));
     }
     if !footnote_html.is_empty() {
         footnote_html = format!("<div class=\"footnote\">{}</div>", footnote_html);
