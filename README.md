@@ -36,7 +36,7 @@ This is a 3 step process:
 1. Setup a `.env` file.
 2. Create HTMLs of Translations or Tafsir. This fetches all Surah content as JSON from `quran.com` which is then converted into HTML. Includes core logic of this tool.
 3. Convert these HTMLs into PDF or EPUB.
-    1. PDF is recommended for most users, as EPUB will require an additional installation of `KoReader` app in eReaders to properly render fonts. Default eReader don't support these fonts.
+    1. PDF is recommended for most users, as EPUB will require an additional installation of `KoReader` app in eReaders to properly render fonts. Watch my video on EPUB tutorial https://youtu.be/Jret-648FZ4. Default eReader don't support these fonts.
 
   
 ### 1. Setup .env file:
