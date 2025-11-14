@@ -1,26 +1,31 @@
-### 📘 Download eBooks
+# 📘 Download eBooks
 
-You can download the available eBooks from this folder:
+You can download available eBooks from these links:
 
-👉 [Click here to open the Google Drive `quran-ebooks` folder](https://drive.google.com/drive/folders/1RQ7F3-RSJ_uS9wJMIiVAa1d_gigpGpFk?usp=sharing)
+- ### Quran - Arabic Only - IndoPak font [Download Link](https://drive.google.com/drive/folders/1e9ID9a5LEiMKZbvK84_VSYZ0LctS5qCm?usp=sharing)
+- ### Quran - Arabic with Translation Saheeh International - IndoPak font [Download Link](https://drive.google.com/drive/folders/1GALrk2ZB0HxoZJh8g3EX2enE4VTzBeTd?usp=sharing)
+- ### Quran - Tafsirs [Download Link](https://drive.google.com/drive/folders/1eVon53mh1hXJ5IuuNE-4mEx4DC6UX9ED?usp=sharing)
 
-Then click on any file you want, and press the **Download** button.
 
-IMPORTANT NOTE: 
-- You can download either Quran PDF or EPUB version. But EPUB version needs an additional setup, unlike PDFs. 
-- Watch my Youtube video for EPUB tutorial: https://youtu.be/Jret-648FZ4
+All these ebooks are also available under one Google Drive folder [quran-ebooks](https://drive.google.com/drive/folders/1RQ7F3-RSJ_uS9wJMIiVAa1d_gigpGpFk?usp=sharing)
 
+# ❓ Can’t find the eBook you’re looking for? Fill out [this Google form](https://forms.gle/j4wQ8YZpaBrJZtEX8) and I will create it for you, insha’Allah.
+
+# Note:
+- All content in these eBooks is sourced exclusively from `quran.com`. Full credit goes to the developers of `quran.com` for their dedicated work; I claim none of it as my own.
+- The download link above gives 2 options to download: EPUB or PDF. PDF being the EASIEST to view and recommended for most people, while EPUB requires additional setup of KOReader. Watch my Youtube video for EPUB tutorial: https://youtu.be/Jret-648FZ4
 
 ---
 Please report any issues or bugs at the email provided in the Google Drive link above.
 
 ---
-### Or you can generate your custom ebooks by the following documentation: (only for Technical audience)
+# Tool Documentation - Only for Technical Audience
+Generate your custom ebooks by the following documentation
 
 ### Qurán for eReaders
 Features:
 - Quran Arabic. Indopak Nastaleeq Waqf Lazim font
-- Word by Word translation
+- Word by Word translation.
 - English translations supported
 - Page number and Sajdah
 - Tafsir support
