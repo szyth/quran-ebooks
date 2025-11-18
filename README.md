@@ -22,13 +22,6 @@ Please report any issues or bugs at the email provided in the Google Drive link 
 # Tool Documentation - Only for Technical Audience
 Generate your custom ebooks by the following documentation
 
-### Qurán for eReaders
-Features:
-- Quran Arabic. Indopak Nastaleeq Waqf Lazim font
-- Word by Word translation.
-- English translations supported
-- Page number and Sajdah
-- Tafsir support
 
 Snippet from Kobo eReader:
 ![Reader_67  Al-Mulk epub_p2_2025-07-01_125848](https://github.com/user-attachments/assets/1c6f5fc0-dedd-4a16-869d-a233f3029dd3)
