@@ -33,6 +33,14 @@ Features:
 Snippet from Kobo eReader:
 ![Reader_67  Al-Mulk epub_p2_2025-07-01_125848](https://github.com/user-attachments/assets/1c6f5fc0-dedd-4a16-869d-a233f3029dd3)
 
+---
+---
+## KNOWN ISSUE in quran.com developer API (4.0 version at the time of writing)
+- For IndoPak script, we get ayah number one word before the ayah end. This has been observed at: 53:21,27,37,45, 75:39, 80:3, 92:3
+<img width="576" height="204" alt="image" src="https://github.com/user-attachments/assets/8c2949ac-b61f-4b81-9e90-e1bc9114b5fa" />
+
+### Workaround
+- Until quran.com developer API is updated, we have to manually add a line break (`<br>` tag) between ayah end and Ayah number in generated HTML at the known ayah mentioned above.
 
 
 ## Create eBOOKs
