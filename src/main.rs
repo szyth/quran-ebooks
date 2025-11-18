@@ -1,36 +1,25 @@
-use clap::{ArgGroup, CommandFactory, Parser};
-
 use crate::utils::http::{ACCESS_TOKEN, HTTP_CLIENT};
+use clap::Parser;
+
 mod env;
 mod quran_com;
 mod tafsir;
 mod translations;
 mod utils;
 
+const TRANSLATION_CONFIG_FILE: &str = "translation_config.json";
+const TAFSIR_CONFIG_FILE: &str = "tafsir_config.json";
+
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
-#[command(group(
-    ArgGroup::new("mode")
-        .required(true)
-        .args([ "translations", "tafsir"])
-))]
-
 struct Args {
-    /// Get Arabic and Translations
+    /// Generate translations HTML (required if both configs exist)
     #[arg(long)]
     translations: bool,
 
-    /// Get Tafsir
+    /// Generate tafsir HTML (required if both configs exist)
     #[arg(long)]
     tafsir: bool,
-
-    /// Start surah (required with --translations), 1 to 114
-    #[arg(long, value_parser = clap::value_parser!(u8).range(1..=114))]
-    start_surah: Option<u8>,
-
-    /// End surah (optional with --translations), 1 to 114
-    #[arg(long, value_parser = clap::value_parser!(u8).range(1..=114))]
-    end_surah: Option<u8>,
 }
 
 async fn logs() {
@@ -54,11 +43,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
         std::process::exit(1)
     }
 
-    // Show help if no args passed
-    if std::env::args().len() == 1 {
-        Args::command().print_help()?;
-        println!();
-        std::process::exit(0);
+    // Parse CLI arguments
+    let args = Args::parse();
+
+    // User must specify either --translations or --tafsir
+    if !args.translations && !args.tafsir {
+        tracing::error!("Error: Must specify which config to run");
+        tracing::info!("Usage:");
+        tracing::info!("  cargo run -- --translations   (to generate translations)");
+        tracing::info!("  cargo run -- --tafsir        (to generate tafsir)");
+        std::process::exit(1);
+    }
+
+    // Check if both flags are provided
+    if args.translations && args.tafsir {
+        tracing::error!("Error: Cannot specify both --translations and --tafsir");
+        tracing::info!("Please choose one: either --translations OR --tafsir");
+        std::process::exit(1);
     }
 
     // build global reqWest HTTP client
@@ -80,48 +81,35 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Sync + Send>> {
         .set(token.clone())
         .expect("ERROR: failed to store access token");
 
-    // Parse Args
-    let args = Args::parse();
-
-    // Translations flow
+    // Generate based on which flag was provided
     if args.translations {
-        if args.start_surah.is_none() {
-            tracing::error!("Error: --translations requires --start-surah <START_SURAH>");
-            std::process::exit(1);
-        }
-
-        if let (Some(start), Some(end)) = (args.start_surah, args.end_surah) {
-            if start > end {
-                tracing::error!("Error: --start-surah must be less than or equal to --end-surah");
+        let translation_config = match translations::config::TranslationConfig::from_file(TRANSLATION_CONFIG_FILE) {
+            Ok(cfg) => cfg,
+            Err(e) => {
+                tracing::error!("Error loading {}: {}", TRANSLATION_CONFIG_FILE, e);
+                tracing::info!("Please ensure {} exists and is valid", TRANSLATION_CONFIG_FILE);
                 std::process::exit(1);
             }
-        }
+        };
 
-        let start_surah = args.start_surah.unwrap(); // safe to use unwrap
-        let end_surah = args.end_surah.unwrap_or(start_surah);
-        if let Err(e) = translations::generate_html::handler(start_surah, end_surah).await {
-            tracing::error!("Error: {e}");
+        tracing::info!("Generating translations HTML...");
+        if let Err(e) = translations::generate_html::handler(translation_config).await {
+            tracing::error!("Error generating translations: {e}");
             std::process::exit(1);
         }
-    }
-    // Tafsir flow
-    if args.tafsir {
-        if args.start_surah.is_none() {
-            tracing::error!("Error: --tafsir requires --start-surah <START_SURAH>");
-            std::process::exit(1);
-        }
-
-        if let (Some(start), Some(end)) = (args.start_surah, args.end_surah) {
-            if start > end {
-                tracing::error!("Error: --start-surah must be less than or equal to --end-surah");
+    } else if args.tafsir {
+        let tafsir_config = match tafsir::config::TafsirConfig::from_file(TAFSIR_CONFIG_FILE) {
+            Ok(cfg) => cfg,
+            Err(e) => {
+                tracing::error!("Error loading {}: {}", TAFSIR_CONFIG_FILE, e);
+                tracing::info!("Please ensure {} exists and is valid", TAFSIR_CONFIG_FILE);
                 std::process::exit(1);
             }
-        }
+        };
 
-        let start_surah = args.start_surah.unwrap(); // safe to use unwrap
-        let end_surah = args.end_surah.unwrap_or(start_surah);
-        if let Err(e) = tafsir::generate_html::handler(start_surah, end_surah).await {
-            tracing::error!("Error: {e}");
+        tracing::info!("Generating tafsir HTML...");
+        if let Err(e) = tafsir::generate_html::handler(tafsir_config).await {
+            tracing::error!("Error generating tafsir: {e}");
             std::process::exit(1);
         }
     }

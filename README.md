@@ -37,27 +37,53 @@ Snippet from Kobo eReader:
 
 ## Create eBOOKs
 
-This is a 3 step process:
-1. Setup a `.env` file.
-2. Create HTMLs of Translations or Tafsir. This fetches all Surah content as JSON from `quran.com` which is then converted into HTML. Includes core logic of this tool.
-3. Convert these HTMLs into PDF or EPUB.
-    1. PDF is recommended for most users, as EPUB will require an additional installation of `KoReader` app in eReaders to properly render fonts. Watch my video on EPUB tutorial https://youtu.be/Jret-648FZ4. Default eReader don't support these fonts.
+This is a 4 step process:
+1. Setup a `.env` file
+2. Configure `translation_config.json` and/or `tafsir_config.json` (both exist by default)
+3. Generate HTML files using CLI flags (`--translations` or `--tafsir`)
+4. Convert HTMLs to PDF or EPUB
+    - PDF is recommended for most users, as EPUB requires additional setup of `KoReader` app. Watch tutorial: https://youtu.be/Jret-648FZ4
 
-  
-### 1. Setup .env file:
+
+### 1. Setup .env file
 - Get API Access from https://api-docs.quran.foundation/request-access
-- Create `.env` using above API credentials, refer `sampleenv` file for format.
+- Create `.env` using above API credentials, refer `sampleenv` file for format
 
+### 2. Configure Settings
+Both `translation_config.json` and `tafsir_config.json` exist by default in root directory. Edit them as needed. See `CONFIG_GUIDE.md` for detailed options.
 
-### 2. Generate HTMLs for Translation or Tafsir
-```bash
-cargo run -- --translations --start-surah 1 --end-surah 114
-cargo run -- --tafsir       --start-surah 1 --end-surah 114
-
-# Created HTMLs can be found in `output/` folder
+**Translation Config Example:**
+```json
+{
+  "start_surah": 1,
+  "end_surah": 114,
+  "arabic": { "script": "indopak" },
+  "word_by_word": true,
+  "translation": { "id": 20 }
+}
 ```
 
-### 3a. Convert HTMLs to PDFs
+**Tafsir Config Example:**
+```json
+{
+  "start_surah": 1,
+  "end_surah": 114,
+  "resource_id": 168
+}
+```
+
+### 3. Generate HTML Files
+```bash
+# Generate translations:
+cargo run -- --translations
+
+# Generate tafsir:
+cargo run -- --tafsir
+
+# Output HTML files will be in `output/` folder
+```
+
+### 4a. Convert HTMLs to PDFs
 ```bash
 # Install Calibre software, it comes with an `ebook-convert` plugin.
 # run the following shell command from root of project.
@@ -72,7 +98,7 @@ ebook-convert filename.html filename.pdf --disable-font-rescaling --pdf-default-
 ```
 
 
-### 3b. Convert HTMLs to eBOOK (EPUB format)
+### 4b. Convert HTMLs to eBOOK (EPUB format)
 ```bash
 # Install Calibre software, it comes with an `ebook-convert` plugin.
 # run the following shell command from root of project.

@@ -16,6 +16,7 @@ pub(crate) struct Verse {
     manzil_number: u32,
     pub(crate) sajdah_number: Option<u32>,
     text_uthmani: String,
+    qpc_uthmani_hafs: String,
     pub(crate) text_indopak_nastaleeq: String,
     pub(crate) page_number: u32,
     juz_number: u32,
@@ -83,9 +84,14 @@ pub(crate) enum Error {
 }
 
 impl Verse {
-    pub(crate) async fn by_surah(surah_number: u8) -> Result<VerseData, Error> {
+    pub(crate) async fn by_surah(
+        surah_number: u8,
+        translation_id: Option<u8>,
+    ) -> Result<VerseData, Error> {
         tracing::info!("Fetching Verses from quran.com server");
-        let data = crate::quran_com::apis::get_verses_by_chapter::handler(surah_number).await?;
+        let data =
+            crate::quran_com::apis::get_verses_by_chapter::handler(surah_number, translation_id)
+                .await?;
         Ok(data)
     }
 
@@ -96,8 +102,9 @@ impl Verse {
             self.text_indopak_nastaleeq
         )
     }
-    pub(crate) fn get_arabic_uthmani(self) -> String {
-        format!("<div class=\"arabic\">{}</div>", self.text_uthmani)
+    pub(crate) fn get_arabic_uthmani(&self) -> String {
+        tracing::debug!("Inside get_arabic_uthmani()");
+        format!("<div class=\"arabic\">{}</div>", self.qpc_uthmani_hafs)
     }
     pub(crate) fn get_word_by_word(&self) -> String {
         tracing::debug!("Inside get_word_by_word()");

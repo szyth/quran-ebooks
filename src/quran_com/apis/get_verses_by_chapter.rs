@@ -20,7 +20,10 @@ pub(crate) enum Error {
 // official docs:
 // https://api-docs.quran.foundation/docs/content_apis_versioned/verses-by-chapter-number
 
-pub(crate) async fn handler(surah_number: u8) -> Result<verse::VerseData, Error> {
+pub(crate) async fn handler(
+    surah_number: u8,
+    translation_id: Option<u8>,
+) -> Result<verse::VerseData, Error> {
     let url = format!(
         "{}/verses/by_chapter/{}",
         env::api_url().unwrap(),
@@ -37,14 +40,20 @@ pub(crate) async fn handler(surah_number: u8) -> Result<verse::VerseData, Error>
         h
     };
     let mut params = HashMap::new();
-    params.insert("translations", "20");
+
+    // Use provided translation_id or default to "20" (Sahih International)
+    let translation_id_str = translation_id
+        .map(|id| id.to_string())
+        .unwrap_or_else(|| "20".to_string());
+    params.insert("translations", translation_id_str.as_str());
+
     params.insert("translation_fields", "verse_number,page_number");
     params.insert("words", "true");
     params.insert(
         "word_fields",
         "verse_key,verse_id,page_number,location,text_uthmani,text_indopak_nastaleeq,qpc_uthmani_hafs",
     );
-    params.insert("fields", "text_uthmani,text_indopak_nastaleeq");
+    params.insert("fields", "text_uthmani,text_indopak_nastaleeq,qpc_uthmani_hafs");
     params.insert("per_page", "1000");
 
     let body = client

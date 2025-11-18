@@ -1,7 +1,8 @@
+use crate::tafsir::config::TafsirConfig;
 use crate::quran_com::types::{
     surah_details,
     tafsir::{self, Tafsir},
-    tafsir_details, verse,
+    tafsir_details,
 };
 
 #[derive(thiserror::Error, Debug)]
@@ -25,17 +26,16 @@ pub(crate) enum Error {
 }
 
 #[tracing::instrument(skip_all)]
-pub(crate) async fn handler(start_surah: u8, end_surah: u8) -> Result<(), Error> {
-    let resource_id = 169; // hardcoded tafsir ID. refer folder static/tafsirs.json for tafsir ID.
-    for surah_number in start_surah..=end_surah {
+pub(crate) async fn handler(config: TafsirConfig) -> Result<(), Error> {
+    for surah_number in config.start_surah..=config.end_surah {
         tracing::info!(
             "Initiate Tafsir HTML generation for Surah number: {}",
             surah_number
         );
         let surah_details = surah_details::handler(surah_number)?;
-        let tafsir_details = tafsir_details::handler(resource_id)?;
+        let tafsir_details = tafsir_details::handler(config.resource_id as usize)?;
         tracing::info!("Fetched {:#?}", surah_details);
-        let data = Tafsir::by_surah(surah_number, resource_id).await?;
+        let data = Tafsir::by_surah(surah_number, config.resource_id as usize).await?;
 
         let mut output_html = get_html_styling();
 

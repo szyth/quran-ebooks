@@ -1,0 +1,9 @@
+{
+  "start_surah": 1,
+  "end_surah": 114,
+  "arabic": {
+    "script": "uthmani"
+  },
+  "word_by_word": false,
+  "translation": null
+}

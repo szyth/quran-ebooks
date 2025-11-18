@@ -1,5 +1,5 @@
 use regex::Regex;
-use reqwest::{header::HeaderMap, Client};
+use reqwest::header::HeaderMap;
 
 use crate::{
     env,
