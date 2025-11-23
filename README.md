@@ -51,7 +51,7 @@ This is a 4 step process:
 - Create `.env` using above API credentials, refer `sampleenv` file for format
 
 ### 2. Configure Settings
-Both `translation_config.json` and `tafsir_config.json` exist by default in root directory. Edit them as needed. See `CONFIG_GUIDE.md` for detailed options.
+Both `translation_config.json` and `tafsir_config.json` exist by default in root directory. Edit them as needed. See [CONFIG_GUIDE.md](CONFIG_GUIDE.md) for detailed options.
 
 **Translation Config Example:**
 ```json
