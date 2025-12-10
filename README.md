@@ -7,7 +7,7 @@ You can download available eBooks from these links:
 - ### Quran - Tafsir [Download Link](https://drive.google.com/drive/folders/1eVon53mh1hXJ5IuuNE-4mEx4DC6UX9ED?usp=sharing)
 
 
-All these ebooks are also available under one Google Drive folder [quran-ebooks](https://drive.google.com/drive/folders/1RQ7F3-RSJ_uS9wJMIiVAa1d_gigpGpFk?usp=sharing)
+All these ebooks and others not listed here are available under one Google Drive folder [quran-ebooks](https://drive.google.com/drive/folders/1RQ7F3-RSJ_uS9wJMIiVAa1d_gigpGpFk?usp=sharing)
 
 # ❓ Can’t find the eBook you’re looking for? Fill out [this Google form](https://forms.gle/j4wQ8YZpaBrJZtEX8) and I will create it for you, insha’Allah.
 
