@@ -1,8 +1,8 @@
-use crate::translations::config::TranslationConfig;
 use crate::quran_com::types::{
     surah_details,
     verse::{self, Verse},
 };
+use crate::translations::config::TranslationConfig;
 
 #[derive(thiserror::Error, Debug)]
 pub(crate) enum Error {
@@ -28,7 +28,10 @@ pub(crate) async fn handler(config: TranslationConfig) -> Result<(), Error> {
 
     // Add table of contents
     tracing::info!("Creating table of contents");
-    output_html.push_str(&get_table_of_contents(config.start_surah, config.end_surah)?);
+    output_html.push_str(&get_table_of_contents(
+        config.start_surah,
+        config.end_surah,
+    )?);
 
     for surah_number in config.start_surah..=config.end_surah {
         tracing::info!(
@@ -173,8 +176,8 @@ fn get_css_header(config: &TranslationConfig) -> String {
             @font-face {{
                 font-family: 'IndoPak';
                 src:
-                    local('AlQuran IndoPak by QuranWBW'),
-                    url('fonts/AlQuranNeov5x1_hanafi.ttf') format('truetype');
+                    local('Indopak Hanafi v5.3.1'),
+                    url('fonts/AlQuranNeo5x2Hanafi.ttf') format('truetype');
                 font-display: swap;
             }}
 

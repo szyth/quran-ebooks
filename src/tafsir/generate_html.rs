@@ -1,9 +1,9 @@
-use crate::tafsir::config::TafsirConfig;
 use crate::quran_com::types::{
     surah_details,
     tafsir::{self, Tafsir},
     tafsir_details,
 };
+use crate::tafsir::config::TafsirConfig;
 
 #[derive(thiserror::Error, Debug)]
 pub(crate) enum Error {
@@ -81,8 +81,8 @@ fn get_html_styling() -> String {
             @font-face {{
                 font-family: 'IndoPak';
                 src:
-                    local('AlQuran IndoPak by QuranWBW'),
-                    url('fonts/indopak-nastaleeq-waqf-lazim-v4.2.1.ttf') format('truetype');
+                    local('Indopak Hanafi v5.3.1'),
+                    url('fonts/AlQuranNeo5x2Hanafi.ttf') format('truetype');
                 font-display: swap;
             }}
 
