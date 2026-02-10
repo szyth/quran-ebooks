@@ -4,9 +4,10 @@
 You can download available eBooks from these links:
 
 - ### Quran - Arabic (Indopak Script) + Word-by-Word + Translation (Sahih International) [Link](https://drive.google.com/drive/folders/1GALrk2ZB0HxoZJh8g3EX2enE4VTzBeTd?usp=drive_link)
+- ### Quran - Arabic (Indopak Script) + Translation (Sahih International) [Link](https://drive.google.com/drive/folders/1S0AicQ0nEtM15OCSaBc3uGexoFxGemKY?usp=drive_link)
 - ### Quran - Arabic (Indopak Script) [Link](https://drive.google.com/drive/folders/1e9ID9a5LEiMKZbvK84_VSYZ0LctS5qCm?usp=drive_link)
-- ### Quran - Arabic (Uthmani Script) [Link](https://drive.google.com/drive/folders/1QSqV87qP-pU-WwS6lCtxkl03h9m-kb2Y?usp=drive_link)
 - ### Quran - Arabic (Uthmani Script) + Translation (Sahih International) [Link](https://drive.google.com/drive/folders/1RyXhpWHLgGka4D79i10wQA1nqeK-TzEv?usp=drive_link)
+- ### Quran - Arabic (Uthmani Script) [Link](https://drive.google.com/drive/folders/1QSqV87qP-pU-WwS6lCtxkl03h9m-kb2Y?usp=drive_link)
 
 All these ebooks and others not listed here are available under one Google Drive folder [quran-ebooks](https://drive.google.com/drive/folders/1RQ7F3-RSJ_uS9wJMIiVAa1d_gigpGpFk?usp=sharing)
 
