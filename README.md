@@ -28,10 +28,10 @@ Report any issues, queries or requests here: LinkedIn: https://www.linkedin.com/
 
 
 # Guide: eBook layout
-- Each verse will have at max 3 parts: Arabic, Word-by-Word, and Translation.
-- There are different ebooks available (see Index above) that has all three, two or just one part based on user’s customization requests.
+- Each verse will have at max 4 parts: Arabic, Word-by-Word, Transliteration, and Translation.
+- There are different ebooks available (see Index above) that have some or all of these parts based on user’s customization requests.
 
-*This is a snippet from one of the ebooks that has all three parts:*
+*This is a snippet from one of the ebooks that has three parts (Arabic, Word-by-Word, Translation):*
 <img width="1512" height="624" alt="image" src="https://github.com/user-attachments/assets/ae5874e2-9df4-4bfe-9b0c-2d350a9d894b" />
 
 
@@ -58,7 +58,12 @@ Examples of each:
 - Each word is separated by a dot “.”
 - Beneficial for students learning Arabic and want a quick word meaning.
 
-## 3. Translation
+## 3. Transliteration
+- English transliteration of each word, shown as one line in italics.
+- Example (1:2): *al-ḥamdu lillahi rabbi l-ʿālamīna*
+- Beneficial for readers who are still learning to read the Arabic script.
+
+## 4. Translation
 - Multilingual translation. 
 - Most common is English Sahih International
 

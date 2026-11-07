@@ -24,6 +24,7 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
     "script": "indopak"
   },
   "word_by_word": true,
+  "transliteration": true,
   "translation": {
     "id": 20
   }
@@ -63,6 +64,12 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
 - **Description**: Include word-by-word English translation
 - **Example**: `true`
 
+#### `transliteration` (optional)
+- **Type**: Boolean (`true` or `false`)
+- **Default**: `false`
+- **Description**: Include word-by-word English transliteration, shown as one line under the word-by-word translation (e.g. `al-ḥamdu lillahi rabbi l-ʿālamīna`)
+- **Example**: `true`
+
 #### `translation` (optional)
 - **Type**: Object or `null`
 - **Description**: Include full verse translation
@@ -71,16 +78,18 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
   - `{"id": <number>}` - Include translation with specified ID
 
 **Popular Translation IDs:**
-- `20` - Sahih International (English)
-- `131` - Dr. Mustafa Khattab, The Clear Quran (English)
-- `85` - Mufti Taqi Usmani (English)
-- `57` - Muhammad Asad (English)
-- `19` - Tafsir al-Jalalayn (Arabic)
+- `20` - Saheeh International (English)
+- `85` - M.A.S. Abdel Haleem (English)
+- `84` - Mufti Taqi Usmani (English)
+- `19` - M. Pickthall (English)
+- `57` - Transliteration (English, whole verse in a plain-letter style). For word-by-word transliteration, use `"transliteration": true` instead.
+
+The full list is available from the API endpoint `/resources/translations`.
 
 **Example:**
 ```json
 "translation": {
-  "id": 131
+  "id": 85
 }
 ```
 
@@ -95,6 +104,7 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
     "script": "indopak"
   },
   "word_by_word": true,
+  "transliteration": true,
   "translation": {
     "id": 20
   }
@@ -108,8 +118,9 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
   "end_surah": 114,
   "arabic": null,
   "word_by_word": false,
+  "transliteration": false,
   "translation": {
-    "id": 131
+    "id": 85
   }
 }
 ```
@@ -123,11 +134,12 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
     "script": "uthmani"
   },
   "word_by_word": false,
+  "transliteration": false,
   "translation": null
 }
 ```
 
-#### 4. Single Surah with Word-by-Word
+#### 4. Single Surah with Word-by-Word and Transliteration
 ```json
 {
   "start_surah": 2,
@@ -136,6 +148,7 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
     "script": "indopak"
   },
   "word_by_word": true,
+  "transliteration": true,
   "translation": null
 }
 ```
@@ -149,6 +162,7 @@ The `quran-epubs` tool uses **separate JSON configuration files** for translatio
     "script": "indopak"
   },
   "word_by_word": true,
+  "transliteration": false,
   "translation": {
     "id": 20
   }
@@ -161,7 +175,7 @@ The tool will validate your translation configuration and show errors if:
 
 1. `start_surah` or `end_surah` is not between 1-114
 2. `start_surah` is greater than `end_surah`
-3. All content options (`arabic`, `word_by_word`, `translation`) are disabled
+3. All content options (`arabic`, `word_by_word`, `transliteration`, `translation`) are disabled
 4. The JSON syntax is invalid
 
 ---

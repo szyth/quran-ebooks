@@ -100,6 +100,11 @@ async fn get_all_verses(surah_number: u8, config: &TranslationConfig) -> Result<
             verse_content.push_str(&verse.get_word_by_word());
         }
 
+        // Include word-by-word transliteration if requested
+        if config.transliteration {
+            verse_content.push_str(&verse.get_transliteration());
+        }
+
         // Include translation if requested
         if config.translation.is_some() {
             verse_content.push_str(&verse.get_translations().await?);
@@ -227,6 +232,13 @@ fn get_css_header(config: &TranslationConfig) -> String {
             .wbw {{
                 font-size: 0.8em;
                 margin-top: 5px;
+                margin-bottom: 2px;
+            }}
+
+            .transliteration {{
+                font-size: 0.8em;
+                font-style: italic;
+                margin-top: 2px;
                 margin-bottom: 2px;
             }}
 
