@@ -31,6 +31,9 @@ Report any issues, queries or requests here: LinkedIn: https://www.linkedin.com/
 - Each verse will have at max 4 parts: Arabic, Word-by-Word, Transliteration, and Translation.
 - There are different ebooks available (see Index above) that have some or all of these parts based on user’s customization requests.
 
+- Each verse has a small header showing the verse number as current/total (e.g. `4/7`), and "sajdah" on verses of prostration.
+- A **Juz** banner marks the start of each Juz, and a lighter **Page** marker shows where each page of the Madani Mushaf (604 pages) begins.
+
 *This is a snippet from one of the ebooks that has three parts (Arabic, Word-by-Word, Translation):*
 <img width="1512" height="624" alt="image" src="https://github.com/user-attachments/assets/ae5874e2-9df4-4bfe-9b0c-2d350a9d894b" />
 

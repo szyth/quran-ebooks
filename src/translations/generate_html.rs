@@ -33,6 +33,10 @@ pub(crate) async fn handler(config: TranslationConfig) -> Result<(), Error> {
         config.end_surah,
     )?);
 
+    // Mushaf page of the previous verse. Carried across surahs, because a page often
+    // ends in one surah and continues into the next.
+    let mut prev_page: Option<u32> = None;
+
     for surah_number in config.start_surah..=config.end_surah {
         tracing::info!(
             "Initiate HTML generation for Surah number: {}",
@@ -40,7 +44,7 @@ pub(crate) async fn handler(config: TranslationConfig) -> Result<(), Error> {
         );
 
         output_html.push_str(&get_cover_page(surah_number)?);
-        output_html.push_str(&get_all_verses(surah_number, &config).await?);
+        output_html.push_str(&get_all_verses(surah_number, &config, &mut prev_page).await?);
     }
 
     // save a response to file
@@ -53,7 +57,11 @@ pub(crate) async fn handler(config: TranslationConfig) -> Result<(), Error> {
     Ok(())
 }
 #[tracing::instrument(skip_all)]
-async fn get_all_verses(surah_number: u8, config: &TranslationConfig) -> Result<String, Error> {
+async fn get_all_verses(
+    surah_number: u8,
+    config: &TranslationConfig,
+    prev_page: &mut Option<u32>,
+) -> Result<String, Error> {
     tracing::info!("Adding verses");
 
     let mut verses_html = String::new();
@@ -61,6 +69,7 @@ async fn get_all_verses(surah_number: u8, config: &TranslationConfig) -> Result<
     // Fetch verses with optional translation_id
     let translation_id = config.translation.as_ref().map(|t| t.id);
     let data = Verse::by_surah(surah_number, translation_id).await?;
+    let verses_count = surah_details::handler(surah_number)?.verses_count;
 
     // Juz that begin exactly at verse 1 of a surah. Can't be detected from a change in
     // juz_number within the surah, so listed here. Mid-surah juz starts come from the API.
@@ -80,10 +89,20 @@ async fn get_all_verses(surah_number: u8, config: &TranslationConfig) -> Result<
             ));
         }
 
+        // Mark the first verse that starts on a new Mushaf page. The first verse of the
+        // book always gets a marker, so the reader knows which page they start on.
+        if *prev_page != Some(verse.page_number) {
+            verses_html.push_str(&format!(
+                "<div class=\"page-start\">Page {}</div>",
+                verse.page_number
+            ));
+        }
+        *prev_page = Some(verse.page_number);
+
         let mut verse_content = String::new();
 
-        // Always include header (page number, sajdah, verse number)
-        verse_content.push_str(&verse.get_header());
+        // Always include header (sajdah, current/total verse number)
+        verse_content.push_str(&verse.get_header(verses_count));
 
         // Include Arabic text if requested
         if let Some(arabic_config) = &config.arabic {
@@ -269,6 +288,13 @@ fn get_css_header(config: &TranslationConfig) -> String {
                 background-color: #e0e0e0;
                 padding: 0.4em;
                 margin-bottom: 20px;
+            }}
+            .page-start {{
+                text-align: center;
+                font-size: 0.7em;
+                border-top: 1px dashed black;
+                padding-top: 0.2em;
+                margin-bottom: 15px;
             }}
             .toc {{
                 border: 3px solid black;
