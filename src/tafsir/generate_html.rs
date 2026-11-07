@@ -105,7 +105,8 @@ fn get_html_styling() -> String {
            
             .arabic {{
                 font-size: 2em;
-                line-height: 1.5;
+                line-height: 2.2;
+                padding: 0.3em 0;
                 font-family: 'IndoPak', sans-serif;
                 direction: rtl;
             }}
