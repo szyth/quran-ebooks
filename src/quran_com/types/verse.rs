@@ -19,7 +19,7 @@ pub(crate) struct Verse {
     qpc_uthmani_hafs: String,
     pub(crate) text_indopak_nastaleeq: String,
     pub(crate) page_number: u32,
-    juz_number: u32,
+    pub(crate) juz_number: u32,
     pub(crate) translations: Vec<Translation>,
     pub(crate) words: Vec<Word>,
 }
