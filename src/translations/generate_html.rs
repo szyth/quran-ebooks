@@ -63,7 +63,24 @@ async fn get_all_verses(surah_number: u8, config: &TranslationConfig) -> Result<
     let data = Verse::by_surah(surah_number, translation_id).await?;
     let verses_count = surah_details::handler(surah_number)?.verses_count;
 
+    // Juz that begin exactly at verse 1 of a surah. Can't be detected from a change in
+    // juz_number within the surah, so listed here. Mid-surah juz starts come from the API.
+    const SURAHS_STARTING_A_JUZ: [u8; 9] = [1, 15, 17, 21, 23, 46, 58, 67, 78];
+    let mut prev_juz: Option<u32> = None;
+
     for verse in data.verses {
+        let juz_starts_here = match prev_juz {
+            Some(prev) => verse.juz_number != prev,
+            None => SURAHS_STARTING_A_JUZ.contains(&surah_number),
+        };
+        prev_juz = Some(verse.juz_number);
+        if juz_starts_here {
+            verses_html.push_str(&format!(
+                "<div class=\"juz-start\">Juz {}</div>",
+                verse.juz_number
+            ));
+        }
+
         let mut verse_content = String::new();
 
         // Always include header (page or juz/surah, sajdah, verse number)
@@ -231,6 +248,16 @@ fn get_css_header(config: &TranslationConfig) -> String {
             }}
             .footnote p {{
                 margin: 3px;
+            }}
+            .juz-start {{
+                text-align: center;
+                font-weight: bold;
+                font-size: 1.3em;
+                border-top: 4px double black;
+                border-bottom: 4px double black;
+                background-color: #e0e0e0;
+                padding: 0.4em;
+                margin-bottom: 20px;
             }}
             .toc {{
                 border: 3px solid black;
