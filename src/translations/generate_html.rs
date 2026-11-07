@@ -61,12 +61,13 @@ async fn get_all_verses(surah_number: u8, config: &TranslationConfig) -> Result<
     // Fetch verses with optional translation_id
     let translation_id = config.translation.as_ref().map(|t| t.id);
     let data = Verse::by_surah(surah_number, translation_id).await?;
+    let verses_count = surah_details::handler(surah_number)?.verses_count;
 
     for verse in data.verses {
         let mut verse_content = String::new();
 
-        // Always include header (page number, sajdah, verse number)
-        verse_content.push_str(&verse.get_header());
+        // Always include header (page or juz/surah, sajdah, verse number)
+        verse_content.push_str(&verse.get_header(surah_number, verses_count));
 
         // Include Arabic text if requested
         if let Some(arabic_config) = &config.arabic {

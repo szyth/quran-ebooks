@@ -158,23 +158,25 @@ impl Verse {
 
         "".to_string()
     }
-    pub(crate) fn get_header(&self) -> String {
+    pub(crate) fn get_header(&self, surah_number: u8, verses_count: u32) -> String {
         tracing::debug!("Inside get_header()");
         format!(
             "<table width=\"100%\">
                     <tr>
                         <td align=\"left\" style=\"white-space: nowrap;\">
-                            <span class=\"page\">Pg.{0}</span>
-                            <span class=\"sajdah\">{1}</span>
+                            <span class=\"page\">J {0} - S {1}</span>
+                            <span class=\"sajdah\">{2}</span>
                         </td>
                         <td align=\"right\" style=\"white-space: nowrap;\">
-                            <span class=\"ayah\">{2}</span>
+                            <span class=\"ayah\">{3}/{4}</span>
                         </td>
                     </tr>
                 </table>",
-            self.page_number,
+            self.juz_number,
+            surah_number,
             self.get_sajdah(),
-            self.verse_number
+            self.verse_number,
+            verses_count
         )
     }
     pub(crate) async fn get_translations(self) -> Result<String, Error> {
