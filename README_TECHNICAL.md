@@ -42,6 +42,7 @@ Both `translation_config.json` and `tafsir_config.json` exist by default in root
   "end_surah": 114,
   "arabic": { "script": "indopak" },
   "word_by_word": true,
+  "transliteration": true,
   "translation": { "id": 20 }
 }
 ```

@@ -38,7 +38,7 @@ pub(crate) struct Word {
     page_number: u32,
     line_number: u32,
     pub(crate) translation: WordTranslation,
-    transliteration: WordTransliteration,
+    pub(crate) transliteration: WordTransliteration,
 }
 #[derive(serde::Deserialize, Debug)]
 pub(crate) struct WordTranslation {
@@ -47,7 +47,7 @@ pub(crate) struct WordTranslation {
 }
 #[derive(serde::Deserialize, Debug)]
 pub(crate) struct WordTransliteration {
-    text: Option<String>,
+    pub(crate) text: Option<String>,
     language_name: String,
 }
 
@@ -147,6 +147,16 @@ impl Verse {
             ));
         }
         format!("<div class=\"wbw\">{}</div>", wbw_html)
+    }
+    pub(crate) fn get_transliteration(&self) -> String {
+        tracing::debug!("Inside get_transliteration()");
+        // The last "word" is the end-of-ayah marker, which has no transliteration (null).
+        let words: Vec<&str> = self
+            .words
+            .iter()
+            .filter_map(|word| word.transliteration.text.as_deref())
+            .collect();
+        format!("<div class=\"transliteration\">{}</div>", words.join(" "))
     }
     pub(crate) fn get_verse_number(&self) -> u32 {
         self.verse_number

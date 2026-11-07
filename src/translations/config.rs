@@ -11,6 +11,9 @@ pub struct TranslationConfig {
     pub arabic: Option<ArabicConfig>,
     /// Include word-by-word translation
     pub word_by_word: bool,
+    /// Include word-by-word transliteration (defaults to false when omitted)
+    #[serde(default)]
+    pub transliteration: bool,
     /// Translation configuration
     pub translation: Option<TranslationDetails>,
 }
@@ -76,9 +79,13 @@ impl TranslationConfig {
         }
 
         // Validate that at least one content type is requested
-        if self.arabic.is_none() && !self.word_by_word && self.translation.is_none() {
+        if self.arabic.is_none()
+            && !self.word_by_word
+            && !self.transliteration
+            && self.translation.is_none()
+        {
             return Err(Error::InvalidConfig(
-                "Must include at least one of: arabic, word_by_word, or translation".to_string()
+                "Must include at least one of: arabic, word_by_word, transliteration, or translation".to_string()
             ));
         }
 
