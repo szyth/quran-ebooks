@@ -99,7 +99,7 @@ impl Verse {
         tracing::debug!("Inside get_arabic_indopak()");
         format!(
             "<div class=\"arabic\">{}</div>",
-            self.text_indopak_nastaleeq
+            fix_indopak_bidi(&self.text_indopak_nastaleeq)
         )
     }
     pub(crate) fn get_arabic_uthmani(&self) -> String {
@@ -195,6 +195,21 @@ impl Verse {
         Ok(translation_html)
     }
 }
+/// The IndoPak text encodes some whole words, waqf signs and the ayah-number circle as
+/// Private Use Area (PUA) characters, which Unicode treats as left-to-right. When a PUA
+/// word is followed by a space and then another PUA character (e.g. the ayah number), the
+/// renderer joins them into one left-to-right run and swaps their order, so the ayah number
+/// appears one word before the end (53:21, 53:27, 53:37, 53:45, 75:39, 80:3, 92:3, 4:157, 37:45).
+///
+/// Inserting a RIGHT-TO-LEFT MARK (U+200F) after a PUA character that is followed by
+/// whitespace splits that run at the word boundary. PUA characters NOT followed by whitespace
+/// are left alone: those are waqf signs that are meant to sit on the ayah circle.
+fn fix_indopak_bidi(text: &str) -> String {
+    static RE: once_cell::sync::Lazy<regex::Regex> =
+        once_cell::sync::Lazy::new(|| regex::Regex::new(r"([\x{E000}-\x{F8FF}])(\s)").unwrap());
+    RE.replace_all(text, "${1}\u{200F}${2}").into_owned()
+}
+
 async fn get_translation_footnote(translation: &str) -> Result<String, Error> {
     tracing::debug!("Inside get_translation_footnote()");
     let footnotes = get_footnote::handler(translation).await?;

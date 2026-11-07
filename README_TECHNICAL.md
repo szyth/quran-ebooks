@@ -7,12 +7,15 @@ Snippet from Kobo eReader:
 
 ---
 ---
-## KNOWN ISSUE in quran.com developer API (4.0 version at the time of writing)
-- For IndoPak script, we get ayah number one word before the ayah end. This has been observed at: 53:21,27,37,45, 75:39, 80:3, 92:3
+## FIXED: IndoPak ayah number shown one word before the ayah end
+- For IndoPak script, the ayah number used to appear one word before the ayah end at: 53:21,27,37,45, 75:39, 80:3, 92:3 (and 4:157, 37:45, where the last waqf mark was pushed past the ayah number).
 <img width="576" height="204" alt="image" src="https://github.com/user-attachments/assets/8c2949ac-b61f-4b81-9e90-e1bc9114b5fa" />
 
-### Workaround
-- Until quran.com developer API is updated, we have to manually add a line break (`<br>` tag) between ayah end and Ayah number in generated HTML at the known ayah mentioned above.
+### Cause
+- The quran.com IndoPak text encodes some whole words, waqf signs and the ayah-number circle as Private Use Area (PUA) characters, which Unicode treats as left-to-right. When a PUA word is followed by a space and then the PUA ayah number, the renderer joins them into one left-to-right run inside the right-to-left line and swaps their order.
+
+### Fix
+- The generator now inserts an invisible RIGHT-TO-LEFT MARK (U+200F) after any PUA character followed by a space (`fix_indopak_bidi` in `src/quran_com/types/verse.rs`). No manual `<br>` editing is needed any more. PUA characters directly touching the ayah number (waqf signs that sit on the circle) are left untouched.
 
 
 ## Create eBOOKs
