@@ -148,20 +148,19 @@ fn get_cover_page(surah_number: u8) -> Result<String, Error> {
     // surah cover page
     tracing::info!("Creating cover page");
 
-    let mut tauz_tasmiya = format!(
+    let mut tasmiya = format!(
         "
-                <div class=\"arabic\">أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيۡطَـٰنِ ٱلرَّجِيمِ</div>
                 <div class=\"arabic\">بِسۡمِ اللهِ الرَّحۡمٰنِ الرَّحِيۡمِ</div>
             "
     );
-    // dont include tauz-tasmiya in Surah Tawbah ie Surah 9
+    // dont include tasmiya in Surah Tawbah ie Surah 9
     if surah_number == 9 {
-        tauz_tasmiya = "".into();
+        tasmiya = "".into();
     }
     let cover_page = format!(
         "
             <div id=\"surah-{4}\" class=\"cover\">
-                {tauz_tasmiya}
+                {tasmiya}
                 <div>Surah {0} | {1}</div>
                 <div>Verses: {2}</div>
                 <div>Revelation: {3}</div>
