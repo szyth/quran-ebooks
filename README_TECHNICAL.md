@@ -80,14 +80,14 @@ cargo run -- --tafsir
 ```bash
 # Install Calibre software, it comes with an `ebook-convert` plugin.
 # run the following shell command from root of project.
-mkdir -p pdfs && for f in output/*.html; do ebook-convert "$f" "pdfs/$(basename "${f%.html}.pdf")" --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15; done
+mkdir -p pdfs && for f in output/*.html; do ebook-convert "$f" "pdfs/$(basename "${f%.html}.pdf")" --max-toc-links 0 --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15; done
 
 # Created PDFs can be found in `pdfs` folder
 
 # OR, do manually with the following command. (make sure `fonts` folder should exist in the same directory as of `filename.html`)
-ebook-convert filename.html filename.pdf --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15
+ebook-convert filename.html filename.pdf --max-toc-links 0 --disable-font-rescaling --pdf-default-font-size 32  --pdf-page-margin-left 15 --pdf-page-margin-right 15 --pdf-page-margin-top 15 --pdf-page-margin-bottom 15
 
-# OR, you can manually drag-and-drop the HTML into Calibre software and click on Convert. Make sure to 'Disable Font Rescaling, PDF Default Font Size: 32, PDF Margin Top Bottom Right Left: 15'
+# OR, you can manually drag-and-drop the HTML into Calibre software and click on Convert. Make sure to 'Disable Font Rescaling, PDF Default Font Size: 32, PDF Margin Top Bottom Right Left: 15' and set Table of Contents → 'Number of links' to 0 (otherwise only the first 50 surahs get bookmarks)
 ```
 
 
@@ -95,14 +95,14 @@ ebook-convert filename.html filename.pdf --disable-font-rescaling --pdf-default-
 ```bash
 # Install Calibre software, it comes with an `ebook-convert` plugin.
 # run the following shell command from root of project.
-mkdir -p epubs && for f in output/*.html; do ebook-convert "$f" "epubs/$(basename "${f%.html}.epub")" --disable-font-rescaling; done
+mkdir -p epubs && for f in output/*.html; do ebook-convert "$f" "epubs/$(basename "${f%.html}.epub")" --max-toc-links 0 --disable-font-rescaling; done
 
 # Created EPUBs can be found in `epubs` folder
 
 # OR, do manually with the following command. (make sure `fonts` folder should exist in the same directory as of `filename.html`)
-ebook-convert filename.html filename.epub --disable-font-rescaling
+ebook-convert filename.html filename.epub --max-toc-links 0 --disable-font-rescaling
 
-# OR, you can manually drag-and-drop the HTML into Calibre software and click on Convert. Make sure to 'Disable Font Rescaling'
+# OR, you can manually drag-and-drop the HTML into Calibre software and click on Convert. Make sure to 'Disable Font Rescaling' and set Table of Contents → 'Number of links' to 0 (otherwise only the first 50 surahs get bookmarks)
 ```
 #### Kindle/Kobo Setup after downloading EPUB:
 - Use [KOReader](https://koreader.rocks/) app to render arabic properly.
