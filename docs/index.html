@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quran eBooks</title>
-  <meta name="description" content="Free Quran eBooks in IndoPak script, as PDF and EPUB, with optional transliteration and Saheeh International translation.">
+  <meta name="description" content="Free Quran eBooks in IndoPak or Uthmani script, as PDF and EPUB, with optional word-by-word meanings, transliteration and Saheeh International translation.">
   <style>
     :root {
       --bg: #f6f4ef;
@@ -45,9 +45,33 @@
     .help strong { color: var(--ink); display: block; margin-bottom: 2px; }
 
     .grid {
-      display: grid; gap: 20px; margin: 24px 0 48px;
+      display: grid; gap: 20px; margin: 20px 0 48px;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     }
+    .tile[hidden] { display: none; }
+    .empty { text-align: center; color: var(--muted); margin: 32px 0 48px; }
+    .filters {
+      display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 16px; margin-top: 24px;
+      position: sticky; top: 0; z-index: 2; box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    }
+    .count { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 0.9rem; }
+    .count button {
+      border: 1px solid var(--line); background: var(--card); border-radius: 999px;
+      padding: 5px 12px; font: inherit; cursor: pointer; color: var(--ink);
+    }
+    .count button:hover { border-color: var(--accent); color: var(--accent); }
+    .filters label { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+    .filters select {
+      font: inherit; font-size: 1rem; font-weight: 500; color: var(--ink);
+      padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+      appearance: none; -webkit-appearance: none; cursor: pointer;
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%;
+      background-size: 5px 5px; background-repeat: no-repeat; padding-right: 32px;
+    }
+    .filters select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
     .tile {
       background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
       overflow: hidden; display: flex; flex-direction: column;
@@ -131,6 +155,7 @@
     @media (max-width: 400px) {
       .grid { grid-template-columns: 1fr; }
       .preview iframe { height: 300px; }
+      .filters { position: static; }
     }
   </style>
 </head>
@@ -139,7 +164,7 @@
     <header>
       <a class="top-link" href="https://github.com/szyth/quran-ebooks" target="_blank" rel="noopener">★ Star on GitHub</a>
       <h1>Quran eBooks</h1>
-      <p>Free Quran eBooks in IndoPak script for phones, tablets and eReaders. Each preview below is the real text of Surah Al-Fatihah from that edition. Pick the one that suits you and download it as PDF or EPUB.</p>
+      <p>Free Quran eBooks in IndoPak or Uthmani script for phones, tablets and eReaders. Every edition is below, and the filters narrow them down. Each preview is the real text of Surah Al-Fatihah from that edition. Download the one that suits you as PDF or EPUB.</p>
       <div class="help">
         <div><strong>PDF: easiest</strong>Opens on any phone, tablet, computer or eReader. No setup needed.</div>
         <div><strong>EPUB: for eReaders</strong>Needs the free KOReader app to show Quranic Arabic correctly. <a href="https://youtu.be/Jret-648FZ4" target="_blank" rel="noopener">Watch the setup video</a>.</div>
@@ -147,65 +172,44 @@
       </div>
     </header>
 
-    <main class="grid">
-      <article class="tile">
-        <div class="tile-head">
-          <h2>Arabic</h2>
-          <p>The Quran in IndoPak script only, for reciting and reading.</p>
-          <div class="tags"><span class="tag">IndoPak</span></div>
-        </div>
-        <div class="preview">
-          <iframe src="previews/quran-indopak-arabic.html" title="Preview of the Arabic edition"></iframe>
-          <button class="expand" data-src="previews/quran-indopak-arabic.html" data-title="Arabic">Full preview</button>
-        </div>
-        <div class="downloads">
-          <div class="buttons">
-            <a class="btn pdf" href="https://github.com/szyth/quran-ebooks/releases/download/v2/quran-indopak-arabic.pdf">Download PDF<small data-size="quran-indopak-arabic.pdf">8.9 MB · 3,370 pages</small></a>
-            <a class="btn epub" href="https://github.com/szyth/quran-ebooks/releases/download/v2/quran-indopak-arabic.epub">Download EPUB<small data-size="quran-indopak-arabic.epub">0.8 MB</small></a>
-          </div>
-        </div>
-      </article>
+    <form class="filters" id="filters" aria-label="Filter editions">
+      <label>Script
+        <select name="script">
+          <option value="all">All</option>
+          <option value="indopak">IndoPak</option>
+          <option value="uthmani">Uthmani</option>
+        </select>
+      </label>
+      <label>Word-by-word meaning
+        <select name="wbw">
+          <option value="all">All</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </label>
+      <label>Transliteration
+        <select name="transliteration">
+          <option value="all">All</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </label>
+      <label>Translation
+        <select name="translation">
+          <option value="all">All</option>
+          <option value="yes">Saheeh International</option>
+          <option value="no">None</option>
+        </select>
+      </label>
+      <div class="count"><span id="count"></span> <button type="reset" id="reset">Show all</button></div>
+    </form>
 
-      <article class="tile">
-        <div class="tile-head">
-          <h2>Arabic + Transliteration</h2>
-          <p>Each verse followed by its English transliteration, for those still learning to read Arabic.</p>
-          <div class="tags"><span class="tag">IndoPak</span><span class="tag">Transliteration</span></div>
-        </div>
-        <div class="preview">
-          <iframe src="previews/quran-indopak-arabic-transliteration.html" title="Preview of the Arabic and transliteration edition"></iframe>
-          <button class="expand" data-src="previews/quran-indopak-arabic-transliteration.html" data-title="Arabic + Transliteration">Full preview</button>
-        </div>
-        <div class="downloads">
-          <div class="buttons">
-            <a class="btn pdf" href="https://github.com/szyth/quran-ebooks/releases/download/v2/quran-indopak-arabic-transliteration.pdf">Download PDF<small data-size="quran-indopak-arabic-transliteration.pdf">11.1 MB · 3,667 pages</small></a>
-            <a class="btn epub" href="https://github.com/szyth/quran-ebooks/releases/download/v2/quran-indopak-arabic-transliteration.epub">Download EPUB<small data-size="quran-indopak-arabic-transliteration.epub">1.1 MB</small></a>
-          </div>
-        </div>
-      </article>
-
-      <article class="tile">
-        <div class="tile-head">
-          <h2>Arabic + Transliteration + Translation</h2>
-          <p>Arabic, transliteration and the Saheeh International English translation with its footnotes.</p>
-          <div class="tags"><span class="tag">IndoPak</span><span class="tag">Transliteration</span><span class="tag">Saheeh International</span></div>
-        </div>
-        <div class="preview">
-          <iframe src="previews/quran-indopak-arabic-transliteration-saheeh.html" title="Preview of the Arabic, transliteration and translation edition"></iframe>
-          <button class="expand" data-src="previews/quran-indopak-arabic-transliteration-saheeh.html" data-title="Arabic + Transliteration + Translation">Full preview</button>
-        </div>
-        <div class="downloads">
-          <div class="buttons">
-            <a class="btn pdf" href="https://github.com/szyth/quran-ebooks/releases/download/v2/quran-indopak-arabic-transliteration-saheeh.pdf">Download PDF<small data-size="quran-indopak-arabic-transliteration-saheeh.pdf">13.7 MB · 4,534 pages</small></a>
-            <a class="btn epub" href="https://github.com/szyth/quran-ebooks/releases/download/v2/quran-indopak-arabic-transliteration-saheeh.epub">Download EPUB<small data-size="quran-indopak-arabic-transliteration-saheeh.epub">1.7 MB</small></a>
-          </div>
-        </div>
-      </article>
-    </main>
+    <main class="grid" id="grid"></main>
+    <p class="empty" id="empty" hidden>No edition matches these filters.</p>
 
     <section class="request">
       <h2>Can’t find the edition you need?</h2>
-      <p>Uthmani script, word-by-word meanings, a different translation, or a single surah: tell me what you need and I will create it for you, insha’Allah.</p>
+      <p>A different translation, another language, or a single surah: tell me what you need and I will create it for you, insha’Allah.</p>
       <a class="cta" href="https://forms.gle/j4wQ8YZpaBrJZtEX8" target="_blank" rel="noopener">Request a custom eBook</a>
     </section>
 
@@ -231,15 +235,111 @@
   </dialog>
 
   <script>
-    const viewer = document.getElementById("viewer");
-    const frame = document.getElementById("viewer-frame");
-    document.querySelectorAll(".expand").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.getElementById("viewer-title").textContent = btn.dataset.title + ": Surah Al-Fatihah";
-        frame.src = btn.dataset.src;
-        if (viewer.showModal) viewer.showModal(); else window.open(btn.dataset.src, "_blank");
+    // Release assets are named by the generator's config: quran-surah-1-114-<key>.{pdf,epub}.
+    // Previews are docs/previews/<key>.html, where <key> is e.g. "indopak-wbw-translation-sahih-intl".
+    const RELEASE = "https://github.com/szyth/quran-ebooks/releases/download/v2/";
+    // File sizes, filled in after the full editions are built:
+    // { "<key>": { pdf: "8.9 MB · 3,387 pages", epub: "0.8 MB" } }
+    const SIZES = {};
+
+    const $ = (id) => document.getElementById(id);
+    const form = $("filters");
+    const grid = $("grid");
+
+    // All 16 editions, in a sensible reading order: simplest first, IndoPak before Uthmani.
+    const editions = [];
+    for (const script of ["indopak", "uthmani"])
+      for (const translation of [false, true])
+        for (const wbw of [false, true])
+          for (const transliteration of [false, true])
+            editions.push({ script, wbw, transliteration, translation });
+
+    function keyOf(e) {
+      return [e.script, e.wbw && "wbw", e.transliteration && "transliteration", e.translation && "translation-sahih-intl"]
+        .filter(Boolean).join("-");
+    }
+
+    function describe(e) {
+      const script = e.script === "uthmani" ? "Uthmani" : "IndoPak";
+      const parts = [];
+      if (e.wbw) parts.push("the English meaning of each word");
+      if (e.transliteration) parts.push("an English transliteration");
+      if (e.translation) parts.push("the Saheeh International translation with its footnotes");
+      const base = "The Quran in " + script + " script";
+      if (!parts.length) return base + " only, for reciting and reading.";
+      const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
+      return base + ", with " + list + ".";
+    }
+
+    function card(e) {
+      const key = keyOf(e);
+      const script = e.script === "uthmani" ? "Uthmani" : "IndoPak";
+      const title = ["Arabic"].concat(e.wbw ? ["Word-by-word"] : [], e.transliteration ? ["Transliteration"] : [], e.translation ? ["Translation"] : []).join(" + ");
+      const tags = [script].concat(e.wbw ? ["Word-by-word"] : [], e.transliteration ? ["Transliteration"] : [], e.translation ? ["Saheeh International"] : []);
+      const size = SIZES[key] || {};
+      const file = RELEASE + "quran-surah-1-114-" + key;
+
+      const el = document.createElement("article");
+      el.className = "tile";
+      el.dataset.script = e.script;
+      el.dataset.wbw = e.wbw ? "yes" : "no";
+      el.dataset.transliteration = e.transliteration ? "yes" : "no";
+      el.dataset.translation = e.translation ? "yes" : "no";
+      el.innerHTML = `
+        <div class="tile-head">
+          <h2></h2>
+          <p></p>
+          <div class="tags"></div>
+        </div>
+        <div class="preview">
+          <iframe loading="lazy" src="previews/${key}.html"></iframe>
+          <button class="expand" type="button">Full preview</button>
+        </div>
+        <div class="downloads">
+          <div class="buttons">
+            <a class="btn pdf" href="${file}.pdf">Download PDF<small></small></a>
+            <a class="btn epub" href="${file}.epub">Download EPUB<small></small></a>
+          </div>
+        </div>`;
+      el.querySelector("h2").textContent = title + (e.script === "uthmani" ? " (Uthmani)" : "");
+      el.querySelector("p").textContent = describe(e);
+      el.querySelector("iframe").title = "Preview: " + title + ", " + script;
+      tags.forEach((t) => {
+        const s = document.createElement("span"); s.className = "tag"; s.textContent = t;
+        el.querySelector(".tags").appendChild(s);
       });
-    });
+      el.querySelector(".pdf small").textContent = size.pdf || "";
+      el.querySelector(".epub small").textContent = size.epub || "";
+      el.querySelector(".expand").addEventListener("click", () => openViewer("previews/" + key + ".html", title + " (" + script + ")"));
+      return el;
+    }
+
+    editions.forEach((e) => grid.appendChild(card(e)));
+
+    function applyFilters() {
+      const f = new FormData(form);
+      let shown = 0;
+      grid.querySelectorAll(".tile").forEach((tile) => {
+        const match = ["script", "wbw", "transliteration", "translation"]
+          .every((k) => f.get(k) === "all" || tile.dataset[k] === f.get(k));
+        tile.hidden = !match;
+        if (match) shown++;
+      });
+      $("count").textContent = shown === editions.length ? "Showing all " + shown + " editions" : "Showing " + shown + " of " + editions.length + " editions";
+      $("reset").hidden = shown === editions.length;
+      $("empty").hidden = shown > 0;
+    }
+    form.addEventListener("change", applyFilters);
+    form.addEventListener("reset", () => setTimeout(applyFilters));
+    applyFilters();
+
+    const viewer = $("viewer");
+    const frame = $("viewer-frame");
+    function openViewer(src, title) {
+      $("viewer-title").textContent = title + ": Surah Al-Fatihah";
+      frame.src = src;
+      if (viewer.showModal) viewer.showModal(); else window.open(src, "_blank");
+    }
     document.getElementById("viewer-close").addEventListener("click", () => viewer.close());
     viewer.addEventListener("click", (e) => { if (e.target === viewer) viewer.close(); });
   </script>
