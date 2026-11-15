@@ -271,7 +271,24 @@
     const RELEASE = "https://github.com/szyth/quran-ebooks/releases/download/v2/";
     // File sizes, filled in after the full editions are built:
     // { "<key>": { pdf: "8.9 MB · 3,387 pages", epub: "0.8 MB" } }
-    const SIZES = {};
+    const SIZES = {
+      "indopak": { pdf: "9.0 MB · 3,387 pages", epub: "0.9 MB" },
+      "indopak-translation-sahih-intl": { pdf: "11.5 MB · 4,121 pages", epub: "1.3 MB" },
+      "indopak-transliteration": { pdf: "11.2 MB · 3,687 pages", epub: "1.3 MB" },
+      "indopak-transliteration-translation-sahih-intl": { pdf: "13.8 MB · 4,560 pages", epub: "1.7 MB" },
+      "indopak-wbw": { pdf: "11.8 MB · 3,780 pages", epub: "1.4 MB" },
+      "indopak-wbw-translation-sahih-intl": { pdf: "14.4 MB · 4,668 pages", epub: "1.7 MB" },
+      "indopak-wbw-transliteration": { pdf: "13.7 MB · 4,155 pages", epub: "1.6 MB" },
+      "indopak-wbw-transliteration-translation-sahih-intl": { pdf: "16.4 MB · 4,991 pages", epub: "2.0 MB" },
+      "uthmani": { pdf: "8.4 MB · 3,412 pages", epub: "0.9 MB" },
+      "uthmani-translation-sahih-intl": { pdf: "10.9 MB · 4,164 pages", epub: "1.4 MB" },
+      "uthmani-transliteration": { pdf: "10.6 MB · 3,732 pages", epub: "1.1 MB" },
+      "uthmani-transliteration-translation-sahih-intl": { pdf: "13.2 MB · 4,590 pages", epub: "1.6 MB" },
+      "uthmani-wbw": { pdf: "11.2 MB · 3,808 pages", epub: "1.3 MB" },
+      "uthmani-wbw-translation-sahih-intl": { pdf: "13.8 MB · 4,700 pages", epub: "1.6 MB" },
+      "uthmani-wbw-transliteration": { pdf: "13.1 MB · 4,182 pages", epub: "1.6 MB" },
+      "uthmani-wbw-transliteration-translation-sahih-intl": { pdf: "15.8 MB · 5,028 pages", epub: "2.0 MB" }
+    };
 
     const $ = (id) => document.getElementById(id);
     const form = $("filters");
