@@ -5,4 +5,9 @@
 > ## **[szyth.github.io/quran-ebooks](https://szyth.github.io/quran-ebooks/)**
 > Free, for phones, tablets and eReaders. Choose IndoPak or Uthmani script, with English meanings if you want them.
 
-Technical documentation (building the eBooks yourself): [README_TECHNICAL.md](README_TECHNICAL.md)
+---
+
+#### Tool documentation: only for a technical audience (building the eBooks yourself)
+Not technical? You can ignore this part. Just use the download link above to get the eBooks.
+
+See [README_TECHNICAL.md](README_TECHNICAL.md)
