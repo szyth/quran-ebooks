@@ -247,6 +247,10 @@ fn get_css_header(config: &TranslationConfig) -> String {
                 font-family: {};
                 direction: rtl;
             }}
+            .waqf {{
+                padding-left: 0.5em;
+                white-space: nowrap;
+            }}
             .wbw {{
                 font-size: 0.8em;
                 margin-top: 5px;

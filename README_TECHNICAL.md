@@ -17,6 +17,15 @@ Snippet from Kobo eReader:
 ### Fix
 - The generator now inserts an invisible RIGHT-TO-LEFT MARK (U+200F) after any PUA character followed by a space (`fix_indopak_bidi` in `src/quran_com/types/verse.rs`). No manual `<br>` editing is needed any more. PUA characters directly touching the ayah number (waqf signs that sit on the circle) are left untouched.
 
+## FIXED: Waqf sign missing at the end of a line
+- A waqf sign right at a line break could be clipped or shown as a stray dot, e.g. the small ص after مِیْثَاقِهٖ in 2:27.
+
+### Cause
+- The text writes waqf signs as standalone tokens between spaces (`مِیْثَاقِهٖ ۪ وَیَقْطَعُوْنَ`). The font gives them zero width and draws them to the left of where they sit, so at a line end they hang into the page margin.
+
+### Fix
+- `attach_waqf_marks` in `src/quran_com/types/verse.rs` glues each standalone sign to the word before it with a no-break space inside `<span class="waqf">`, and the `.waqf` CSS reserves room for it. The word and its sign now always wrap together.
+
 
 ## Create eBOOKs
 
