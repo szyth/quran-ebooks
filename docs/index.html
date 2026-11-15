@@ -233,8 +233,8 @@
         <li>What is wrong, and a screenshot if you can</li>
       </ul>
       <div class="actions">
-        <a class="cta" href="https://github.com/szyth/quran-ebooks/issues/new?title=Mistake%20in%20Surah%20__%2C%20Ayah%20__&amp;labels=text-issue&amp;body=%2A%2AEdition%3A%2A%2A%20%28e.g.%20IndoPak%20%2B%20Word-by-word%20%2B%20Translation%29%0A%2A%2AFile%3A%2A%2A%20PDF%20%2F%20EPUB%0A%2A%2ASurah%20and%20ayah%3A%2A%2A%20%28e.g.%202%3A27%29%0A%2A%2APage%20number%20in%20the%20file%20%28if%20PDF%29%3A%2A%2A%0A%2A%2ADevice%20and%20app%3A%2A%2A%20%28e.g.%20iPhone%2C%20Apple%20Books%20%2F%20Kindle%20%2F%20KOReader%29%0A%0A%2A%2AWhat%20is%20wrong%3A%2A%2A%0A%0A%0A%2A%2AWhat%20it%20should%20be%3A%2A%2A%0A%0A%0A%2A%2AScreenshot%3A%2A%2A%20%28drag%20and%20drop%20it%20here%29%0A" target="_blank" rel="noopener">Report a mistake</a>
-        <span class="alt">No GitHub account? <a href="https://forms.gle/j4wQ8YZpaBrJZtEX8" target="_blank" rel="noopener">Use this form instead</a>.</span>
+        <a class="cta" id="report-mail" href="#report">Email a mistake</a>
+        <span class="alt" id="report-addr"></span>
       </div>
     </section>
 
@@ -363,6 +363,32 @@
     form.addEventListener("change", applyFilters);
     form.addEventListener("reset", () => setTimeout(applyFilters));
     applyFilters();
+
+    // Report email, assembled at runtime so the full address is not in the page source.
+    (function () {
+      const addr = ["quranebooks.feedback", "gmail.com"].join("@");
+      const body = [
+        "Edition: (e.g. IndoPak + Word-by-word + Translation)",
+        "File: PDF / EPUB",
+        "Surah and ayah: (e.g. 2:27)",
+        "Page number in the file (if PDF):",
+        "Device and app: (e.g. iPhone, Apple Books / Kindle / KOReader)",
+        "",
+        "What is wrong:",
+        "",
+        "",
+        "What it should be:",
+        "",
+        "",
+        "(Please attach a screenshot if you can.)",
+      ].join("\n");
+      const href = "mailto:" + addr + "?subject=" + encodeURIComponent("Mistake in Surah __, Ayah __") + "&body=" + encodeURIComponent(body);
+      $("report-mail").href = href;
+      const a = document.createElement("a");
+      a.href = "mailto:" + addr;
+      a.textContent = addr;
+      $("report-addr").append("or write to ", a);
+    })();
 
     const viewer = $("viewer");
     const frame = $("viewer-frame");
