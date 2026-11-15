@@ -48,10 +48,7 @@ pub(crate) async fn handler(config: TranslationConfig) -> Result<(), Error> {
     }
 
     // save a response to file
-    let filename = format!(
-        "output/quran-surah-{}-{}.html",
-        config.start_surah, config.end_surah
-    );
+    let filename = format!("output/{}.html", config.output_name());
     tracing::info!("Storing HTML data here: {filename}",);
     let _write = std::fs::write(filename, output_html)?;
     Ok(())
