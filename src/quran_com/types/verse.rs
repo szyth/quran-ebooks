@@ -229,21 +229,31 @@ fn fix_indopak_bidi(text: &str) -> String {
 /// wraps right after the sign, it hangs into the page margin and is clipped or drawn as a
 /// stray dot.
 ///
-/// Glue each standalone sign to the word before it with a no-break space, so the two always
-/// wrap together, and reserve room on the left for the sign (`.waqf` CSS).
+/// Wrap each word and the sign(s) after it in `<span class="waqf">`, which forbids a line
+/// break inside it and reserves room on the left for the sign (`.waqf` CSS). The normal space
+/// before the sign is kept: the font positions stacked signs (e.g. "ۛۚ" in 2:2) on that space
+/// glyph, and a no-break space breaks the stacking.
 fn attach_waqf_marks(text: &str) -> String {
     static MARKS: once_cell::sync::Lazy<regex::Regex> =
         once_cell::sync::Lazy::new(|| regex::Regex::new(r"^[\p{Mn}\x{200F}]+$").unwrap());
-    let mut out: Vec<String> = Vec::new();
+    // (word, signs that follow it)
+    let mut out: Vec<(String, Vec<String>)> = Vec::new();
     for token in text.split(' ') {
-        if !out.is_empty() && MARKS.is_match(token) {
-            let prev = out.last_mut().unwrap();
-            prev.push_str(&format!("<span class=\"waqf\">\u{00A0}{}</span>", token));
-        } else {
-            out.push(token.to_string());
+        match out.last_mut() {
+            Some(last) if MARKS.is_match(token) => last.1.push(token.to_string()),
+            _ => out.push((token.to_string(), Vec::new())),
         }
     }
-    out.join(" ")
+    out.into_iter()
+        .map(|(word, signs)| {
+            if signs.is_empty() {
+                word
+            } else {
+                format!("<span class=\"waqf\">{} {}</span>", word, signs.join(" "))
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 async fn get_translation_footnote(translation: &str) -> Result<String, Error> {
