@@ -99,12 +99,15 @@ impl Verse {
         tracing::debug!("Inside get_arabic_indopak()");
         format!(
             "<div class=\"arabic\">{}</div>",
-            fix_indopak_bidi(&self.text_indopak_nastaleeq)
+            attach_waqf_marks(&fix_indopak_bidi(&self.text_indopak_nastaleeq))
         )
     }
     pub(crate) fn get_arabic_uthmani(&self) -> String {
         tracing::debug!("Inside get_arabic_uthmani()");
-        format!("<div class=\"arabic\">{}</div>", self.qpc_uthmani_hafs)
+        format!(
+            "<div class=\"arabic\">{}</div>",
+            attach_waqf_marks(&self.qpc_uthmani_hafs)
+        )
     }
     pub(crate) fn get_word_by_word(&self) -> String {
         tracing::debug!("Inside get_word_by_word()");
@@ -218,6 +221,29 @@ fn fix_indopak_bidi(text: &str) -> String {
     static RE: once_cell::sync::Lazy<regex::Regex> =
         once_cell::sync::Lazy::new(|| regex::Regex::new(r"([\x{E000}-\x{F8FF}])(\s)").unwrap());
     RE.replace_all(text, "${1}\u{200F}${2}").into_owned()
+}
+
+/// The IndoPak text writes waqf signs (ط, ج, ص, لا, ق, ...) as standalone tokens of
+/// combining marks between two spaces, e.g. "مِیْثَاقِهٖ ۪ وَیَقْطَعُوْنَ" (2:27). The font
+/// gives these marks zero width and draws them to the left of where they sit. When a line
+/// wraps right after the sign, it hangs into the page margin and is clipped or drawn as a
+/// stray dot.
+///
+/// Glue each standalone sign to the word before it with a no-break space, so the two always
+/// wrap together, and reserve room on the left for the sign (`.waqf` CSS).
+fn attach_waqf_marks(text: &str) -> String {
+    static MARKS: once_cell::sync::Lazy<regex::Regex> =
+        once_cell::sync::Lazy::new(|| regex::Regex::new(r"^[\p{Mn}\x{200F}]+$").unwrap());
+    let mut out: Vec<String> = Vec::new();
+    for token in text.split(' ') {
+        if !out.is_empty() && MARKS.is_match(token) {
+            let prev = out.last_mut().unwrap();
+            prev.push_str(&format!("<span class=\"waqf\">\u{00A0}{}</span>", token));
+        } else {
+            out.push(token.to_string());
+        }
+    }
+    out.join(" ")
 }
 
 async fn get_translation_footnote(translation: &str) -> Result<String, Error> {
