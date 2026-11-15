@@ -1,6 +1,6 @@
 # Quran eBooks
 
-### 📥 To download the Quran eBooks, go to this link:
+## 📥 To download the Quran eBooks, go to this link:
 # **[szyth.github.io/quran-ebooks](https://szyth.github.io/quran-ebooks/)**
 Free, for phones, tablets and eReaders. Choose IndoPak or Uthmani script, with English meanings if you want them.
 
