@@ -48,6 +48,32 @@ pub enum Error {
 }
 
 impl TranslationConfig {
+    /// Output file name (without extension) describing what this config includes, e.g.
+    /// `quran-surah-1-114-indopak-wbw-transliteration-translation-sahih-intl`.
+    pub fn output_name(&self) -> String {
+        let mut parts = vec![format!("quran-surah-{}-{}", self.start_surah, self.end_surah)];
+        if let Some(arabic) = &self.arabic {
+            parts.push(
+                match arabic.script {
+                    ArabicScript::IndoPak => "indopak",
+                    ArabicScript::Uthmani => "uthmani",
+                }
+                .to_string(),
+            );
+        }
+        if self.word_by_word {
+            parts.push("wbw".to_string());
+        }
+        if self.transliteration {
+            parts.push("transliteration".to_string());
+        }
+        if let Some(translation) = &self.translation {
+            parts.push(format!("translation-{}", translation_slug(translation.id)));
+        }
+        parts.join("-")
+    }
+
+
     /// Load configuration from a JSON file
     pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
         let content = std::fs::read_to_string(path)?;
@@ -90,5 +116,18 @@ impl TranslationConfig {
         }
 
         Ok(())
+    }
+}
+
+/// Short file-name label for the translation IDs listed in CONFIG_GUIDE.md.
+/// Any other ID is labelled by its number, e.g. `id-131`.
+fn translation_slug(id: u8) -> String {
+    match id {
+        20 => "sahih-intl".to_string(),
+        85 => "abdel-haleem".to_string(),
+        84 => "taqi-usmani".to_string(),
+        19 => "pickthall".to_string(),
+        57 => "verse-transliteration".to_string(),
+        other => format!("id-{}", other),
     }
 }

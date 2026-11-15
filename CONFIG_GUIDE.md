@@ -284,7 +284,10 @@ cargo run -- --tafsir
 
 After running `cargo run`, your generated files will be in the `output/` directory:
 
-- **Translations**: `output/quran-surah-{start}-{end}.html`
+- **Translations**: `output/quran-surah-{start}-{end}[-{script}][-wbw][-transliteration][-translation-{name}].html`, built from what the config includes. Examples:
+  - `quran-surah-1-114-indopak.html` (Arabic only)
+  - `quran-surah-1-114-indopak-wbw-transliteration-translation-sahih-intl.html`
+  - Translation names: `sahih-intl` (20), `abdel-haleem` (85), `taqi-usmani` (84), `pickthall` (19), `verse-transliteration` (57). Any other ID shows as `id-{number}`.
 - **Tafsir**: `output/{number}. {name}-{tafsir-name}.html`
 
 ### Converting to EPUB
