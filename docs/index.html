@@ -132,7 +132,24 @@
     }
     .star .gh svg { width: 20px; height: 20px; fill: currentColor; }
     .star .gh .s { color: #f5c542; }
-    .top-link { float: right; margin-top: 6px; font-weight: 600; text-decoration: none; }
+    .report {
+      background: #fff7ed; border: 2px solid var(--accent-2); border-radius: var(--radius);
+      padding: clamp(22px, 4vw, 36px); margin-bottom: 24px;
+    }
+    .report h2 { margin: 0 0 10px; font-size: clamp(1.4rem, 3.2vw, 2rem); color: #7a4410; letter-spacing: -0.01em; }
+    .report p { margin: 0 0 12px; font-size: clamp(1rem, 1.9vw, 1.15rem); max-width: 760px; }
+    .report ul { margin: 0 0 18px; padding-left: 20px; color: var(--muted); }
+    .report li { margin: 2px 0; }
+    .report .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .report .cta {
+      display: inline-block; background: var(--accent-2); color: #fff; text-decoration: none;
+      font-weight: 700; font-size: 1.05rem; padding: 12px 24px; border-radius: 999px;
+    }
+    .report .cta:hover { filter: brightness(1.08); }
+    .report .alt { font-size: 0.95rem; }
+    .top-links { float: right; display: flex; gap: 16px; margin-top: 6px; }
+    .top-links a { font-weight: 600; text-decoration: none; }
+    .top-links .warn { color: #7a4410; }
 
     footer { padding: 0 0 40px; color: var(--muted); font-size: 0.9rem; }
 
@@ -162,7 +179,7 @@
 <body>
   <div class="wrap">
     <header>
-      <a class="top-link" href="https://github.com/szyth/quran-ebooks" target="_blank" rel="noopener">★ Star on GitHub</a>
+      <div class="top-links"><a class="warn" href="#report">⚠ Report a mistake</a><a href="https://github.com/szyth/quran-ebooks" target="_blank" rel="noopener">★ Star on GitHub</a></div>
       <h1>Quran eBooks</h1>
       <p>Free Quran eBooks in IndoPak or Uthmani script for phones, tablets and eReaders. Every edition is below, and the filters narrow them down. Each preview is the real text of Surah Al-Fatihah from that edition. Download the one that suits you as PDF or EPUB.</p>
       <div class="help">
@@ -206,6 +223,20 @@
 
     <main class="grid" id="grid"></main>
     <p class="empty" id="empty" hidden>No edition matches these filters.</p>
+
+    <section class="report" id="report">
+      <h2>Found a mistake? Please tell me.</h2>
+      <p>This is the Quran, so every mistake matters and gets fixed first. If you see anything wrong, even something small, please report it: a missing or misplaced mark, a wrong word, a wrong ayah number, text cut off at a page edge, or a translation that does not match.</p>
+      <ul>
+        <li>Which edition, and PDF or EPUB</li>
+        <li>The surah and ayah (e.g. 2:27), and the page number if it is a PDF</li>
+        <li>What is wrong, and a screenshot if you can</li>
+      </ul>
+      <div class="actions">
+        <a class="cta" href="https://github.com/szyth/quran-ebooks/issues/new?title=Mistake%20in%20Surah%20__%2C%20Ayah%20__&amp;labels=text-issue&amp;body=%2A%2AEdition%3A%2A%2A%20%28e.g.%20IndoPak%20%2B%20Word-by-word%20%2B%20Translation%29%0A%2A%2AFile%3A%2A%2A%20PDF%20%2F%20EPUB%0A%2A%2ASurah%20and%20ayah%3A%2A%2A%20%28e.g.%202%3A27%29%0A%2A%2APage%20number%20in%20the%20file%20%28if%20PDF%29%3A%2A%2A%0A%2A%2ADevice%20and%20app%3A%2A%2A%20%28e.g.%20iPhone%2C%20Apple%20Books%20%2F%20Kindle%20%2F%20KOReader%29%0A%0A%2A%2AWhat%20is%20wrong%3A%2A%2A%0A%0A%0A%2A%2AWhat%20it%20should%20be%3A%2A%2A%0A%0A%0A%2A%2AScreenshot%3A%2A%2A%20%28drag%20and%20drop%20it%20here%29%0A" target="_blank" rel="noopener">Report a mistake</a>
+        <span class="alt">No GitHub account? <a href="https://forms.gle/j4wQ8YZpaBrJZtEX8" target="_blank" rel="noopener">Use this form instead</a>.</span>
+      </div>
+    </section>
 
     <section class="request">
       <h2>Can’t find the edition you need?</h2>
